@@ -1,6 +1,7 @@
 /target/
 target/
 .idea
+.mvn
 /**/.idea/*
 .project
 .settings
