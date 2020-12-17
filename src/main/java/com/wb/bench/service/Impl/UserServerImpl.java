@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.wb.bench.entity.User;
 import com.wb.bench.mapper.UserMapper;
 import com.wb.bench.service.UserServer;
+import com.wb.bench.util.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +19,9 @@ public class UserServerImpl extends ServiceImpl<UserMapper, User> implements Use
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    RedisUtil redisUtil;
 
     @Override
     public List<User> queryUser() {
