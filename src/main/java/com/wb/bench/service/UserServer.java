@@ -1,6 +1,8 @@
 package com.wb.bench.service;
 
 import com.wb.bench.entity.User;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -12,7 +14,9 @@ public interface UserServer {
 
     List<User> queryUser();
 
-    User queryUserById(Integer id);
+    User queryUserById(String id);
 
-    int deleteUserById(Integer id);
+    int deleteUserById(String id);
+
+    int createUser(User user);
 }

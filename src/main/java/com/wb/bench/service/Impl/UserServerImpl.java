@@ -29,12 +29,17 @@ public class UserServerImpl extends ServiceImpl<UserMapper, User> implements Use
     }
 
     @Override
-    public User queryUserById(Integer id) {
+    public User queryUserById(String id) {
         return userMapper.selectById(id);
     }
 
     @Override
-    public int deleteUserById(Integer id) {
+    public int deleteUserById(String id) {
         return userMapper.deleteById(id);
+    }
+
+    @Override
+    public int createUser(User user) {
+        return userMapper.insert(user);
     }
 }

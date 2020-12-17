@@ -12,7 +12,7 @@ public class User implements Serializable {
     /**
      * 名称
      */
-    private Integer id;
+    private String id;
     /**
      * 名称
      */
