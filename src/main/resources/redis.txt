@@ -32,7 +32,7 @@ redis主要是基于内存来进行高性能、高并发的读写操作的。
     hash 类似map的一种结构 存放对象  key=100 value={"id":100,name="zhangsan"}
     list  有序可重复列表 粉丝列表 评论类列表 value=[zhangsan,lisi,wangwu]
     set  无序集合，自动去重  基与set玩交集、并集、差集操作。比如交集可以玩微博共同粉丝
-    sorted set 排序的set，去重但可以排序 可以自定义排序
+    sorted set（zset） 排序的set，去重但可以排序 可以自定义排序
 
 5.redis的过期策略
     set key value
