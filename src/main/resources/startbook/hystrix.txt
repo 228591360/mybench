@@ -1,0 +1,34 @@
+如何设计一个高可用系统？  服务保证框架：hystrix ->  资源隔离 请求缓存 熔断 限流 熔断 降级fallback 超时
+
+hystrix是什么   ->  框架 提供了高可用相关的各种个样的功能 在hystrix的保护下，整个系统长期处于高可用的状态
+    hystrix里面最核心的功能就是资源隔离，就是将多个依赖服务的调用分别隔离到各自的资源池内，避免说对某一个依赖服务的调用，因为依赖服务的接口的调用的延迟或者失败导致服务所有的线程资源全部耗费在这个服务上或者说被hang住，一旦全部资源耗尽，可能导致服务就会崩溃。
+
+项目依赖
+    <!-- https://mvnrepository.com/artifact/com.netflix.hystrix/hystrix-core -->
+    <dependency>
+        <groupId>com.netflix.hystrix</groupId>
+        <artifactId>hystrix-core</artifactId>
+        <version>1.5.18</version>
+    </dependency>
+
+Hystrix整个工作流如下：
+    1构造一个 HystrixCommand或HystrixObservableCommand对象，用于封装请求，并在构造方法配置请求被执行需要的参数；
+    2执行命令，Hystrix提供了4种执行命令的方法，execute()和queue() 适用于HystrixCommand对象，而observe()和toObservable()适用于HystrixObservableCommand对象。
+    3判断是否使用缓存响应请求，若启用了缓存，且缓存可用，直接使用缓存响应请求。Hystrix支持请求缓存，但需要用户自定义启动；
+    4判断熔断器是否打开，如果打开，跳到第8步；
+    5判断线程池/队列/信号量是否已满，已满则跳到第8步；
+    6执行HystrixObservableCommand.construct()或HystrixCommand.run()，如果执行失败或者超时，跳到第8步；否则，跳到第9步；
+    7统计熔断器监控指标；
+    8走Fallback备用逻辑
+    9返回请求响应
+
+hystrix的两种资源隔离技术- 限流
+    1）线程池资源隔离 ThreadPoolExecutor ：适合99%的场景使用
+    2）信号量资源隔离 semaphore
+    核心区别：
+    线程池和信号量做资源隔离、限流、容量的限制，默认的容量都是10
+
+    Semaphore和线程池的区别如下：
+    使用Semaphore，实际工作线程由开发者自己创建；使用线程池，实际工作线程由线程池创建
+    使用Semaphore，并发线程的控制必须手动通过acquire()和release()函数手动完成；使用线程池，并发线程的控制由线程池自动管理
+    使用Semaphore不支持设置超时和实现异步访问；使用线程池则可以实现超时和异步访问，通过提交一个Callable对象获得Future，从而可以在需要时调用Future的方法获得线程执行的结果，同样利用Future也可以实现超时
