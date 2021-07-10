@@ -1,0 +1,18 @@
+jvm调优
+    常用参数：
+    -Xmx(-XX:MaxHeapSize)：初始大小内存：初始化的值是物理内存的四分之一
+
+    -Xms(-XX:InitialHeapSize)：最大分配内存：初始化的值是物理内存的六十四分之一
+
+    -Xss(-XX:ThreadStackSize)：设置单个线程栈的大小，一般默认为512k~1024k
+
+    -XX:NewRatio：配置年轻带与老年带在堆结构的占比。
+
+    -XX:MaxTenuringThreshold：设置垃圾的最大年龄 java8之后这个值最大只能设置为15，最低是0
+
+常见的JVM异常
+    StackOverflowError：线程栈空间被耗尽，没有足够资源分配给新创建的栈帧
+    OutOfMemoryError：Java heap space 堆内存中的空间不足以存放新创建的对象
+    OutOfMemoryError: GC overhead limit exceeded 超过98%的时间用来做GC并且回收了不到2%的堆内存
+    OutOfMemoryError: Direct buffer memory 堆外内存
+

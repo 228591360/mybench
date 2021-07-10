@@ -126,3 +126,15 @@ Apache Dubbo 提供了六大核心能力：面向接口代理的高性能RPC调�
         如果有一把锁，被多个人给竞争，此时多个人会排队，第一个拿到锁的人会执行，然后释放锁；后面的每个人都会去监听排在自己前面的那个人创建的 node 上，一旦某个人释放了锁，
         排在自己后面的人就会被 zookeeper 给通知，一旦被通知了之后，就 ok 了，自己就获取到了锁，就可以执行代码了
 
+Zookeeper的实现原理？（工作原理）
+    Zookeeper会维护一个类似于标准的文件系统的具有层次关系的数据结构。这个文件系统中每个子目录项都被称为znode节点，这个znode节点也可以有子节点，每个节点都可以存储数据，
+    客户端也可以对这些node节点进行getChildren，getData,exists方法，同时也可以在znode tree路径上设置watch（类似于监听），当watch路径上发生节点create、delete、update的时候，
+    会通知到client。client可以得到通知后，再获取数据，执行业务逻辑操作。Zookeeper 的作用主要是用来维护和监控存储的node节点上这些数据的状态变化，通过监控这些数据状态的变化，从而达到基于数据的集群管理。
+
+为什么要用zookeeper作为dubbo的注册中心？能选择其他的吗？
+    Zookeeper的数据模型是由一系列的Znode数据节点组成，和文件系统类似。zookeeper的数据全部存储在内存中，性能高；zookeeper也支持集群，实现了高可用；同时基于zookeeper的特性，
+    也支持事件监听（服务的暴露方发生变化，可以进行推送），所以zookeeper适合作为dubbo的注册中心区使用。
+    redis、Simple也可以作为dubbo的注册中心来使用。
+
+项目中主要用zookeeper做了什么？（作用）
+    作为注册中心用；主要是在服务器上搭建zookeeper，其次在spring管理的dubbo的配置文件中配置（暴露方和消费方都需要配置）
