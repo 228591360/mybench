@@ -46,7 +46,7 @@
     获取key的剩余生存时间 ttl key
     删除key的过期时间（生存时间） PERSIST key
     过期删除策略：定期删除+惰性删除
-    内存淘汰机制：allkeys-lru 移除最近最少使用的key（使用最多的机制）
+    内存淘汰机制：alikeys-lru 移除最近最少使用的key（使用最多的机制）
 
 6.redis的瓶颈
     单机 QPS一万到几万
@@ -75,3 +75,15 @@
 
 8.生产环境的redis是怎么部署的？
     redis cluster 10台机器 5台主实例 5台从实例 每一个主挂着一个从，5个节点对外提供读写服务，每个节点读写高峰5万qps 5台最高25万qps
+
+Redis主从同步原理
+    Redis一般是使用Master节点来进行写操作，若干个Slave节点进行读操作
+    ①Slave发送Sync命令到Master
+    ②Master启动一个后台进程，将Redis中的数据快照保存到文件中
+    ③Master将保存数据快照期间接收到的写命令缓存起来
+    ④Master完成写文件操作后，将该文件发送给Slave
+    ⑤使用新的AOF文件替换掉旧的AOF文件
+    ⑥Master将这期间手机的增量写命令发送给Slave端
+
+    哨兵模式
+

@@ -1,0 +1,9 @@
+SpringMVC的执行流程
+    ①首先用户这边发送请求，Spring的DisPatcherServlet捕获
+    ②DisPatcherServlet对请求URL进行解析，然后调用HandlerMapper
+    ③HandlerMapper获得Handler配置，执行Handler
+    ④执行完之后DisPatcherServlet返回一个ModelAndView对象
+    ⑤根据ModelAndView选择合适的ViewResolver
+    ⑥ViewResolver结合Model和View来渲染视图
+    ⑦最后将渲染结果返回给客户端
+

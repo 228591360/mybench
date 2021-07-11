@@ -1,4 +1,12 @@
-MySQL常用引擎有 「 MyISAM和InnoDB 」，而InnoDB是mysql默认的引擎。MyISAM是不支持行锁的，而InnoDB支持行锁和表锁。
+MySQL常用引擎有 「 MyISAM和InnoDB 」，而InnoDB是mysql默认的引擎。
+
+MyISAM和INNODB的区别
+    1.事务安全：MyISAM不支持事务，INNODB支持
+    2.查询和添加速度：MyISAM速度快，INNODB相对慢
+    3.锁机制：MyISAM表锁，而InnoDB支持行锁和表锁。
+    4.支持全文检索：MyISAM支持，INNODB不支持
+    5.外建：MyISAM不支持，INNODB支持
+
 建表优化
     字段尽量为not null
     int类型使用tinyint smallint
@@ -7,15 +15,21 @@ MySQL常用引擎有 「 MyISAM和InnoDB 」，而InnoDB是mysql默认的引擎�
     超长字符串使用text 尽量中从表关联
 
 sql优化
+    查询的字段避免用*号，指定需要的字段
     like使用右查询 like 'aa%' 放左边索引会失效
-    使用jion代替子查询
+    使用join代替子查询
     使用union代替临时表
     使用索引
     读写分离
     主从复制
     分库分表
- 索引失效
+
+索引失效
      不等、空值、or like %放左索引失效变成全表扫描 字符串不见单引索引失效
+
+什么是事务
+     要么成功，要么失败，不可分割的一组操作
+
 事物的特性
     原子性 一致性 隔离性 持久性
 
@@ -23,13 +37,12 @@ sql优化
     ru读未提交 、 rc读提交 、 rr可重复度、  SERIALIZABLE串行化 此隔离级别是四种隔离级别中最高的级别，解决了 「 脏读、可重复读、幻读 」 的问题。
 
 MVCC 是什么：
+   在读提交RC、可重复度RR的隔离级别下，MySQL的InnoDB存储引擎通过 MVCC (多版本并发控制) 机制来解决幻读。
 
-  在读提交RC、可重复度RR的隔离级别下，MySQL的InnoDB存储引擎通过 MVCC (多版本并发控制) 机制来解决幻读。
-
-「 使用MVCC时具体的体现是什么呢？ 」
+使用MVCC时具体的体现是什么呢？
     使事务在并发过程中，SELECT 操作不用加锁，读写不冲突从而提高性能。
 
-「 那么实现MVCC机制的原理是什么呢？ 」
+那么实现MVCC机制的原理是什么呢？
     其原理是通过保存数据在某个时间点的快照来实现的；通过在每行记录后面保存隐藏列来存放事务ID，这样每一个事务，都会对应一个递增的事务ID。
 
 1。为什么分库分表 用过哪些分库分表的中间件  根据id hash取模路由   range分发（按时间段入库）
