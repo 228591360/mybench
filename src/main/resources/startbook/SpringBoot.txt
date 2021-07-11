@@ -1,3 +1,31 @@
 SpringBoot的理解
     SpringBoot就是基于Spring更深封装的一个框架，就是简化Spring的。
     什么初始搭建、开发过程、编码、配置、部署、监控都简单了，他还内置了tomcat
+
+Spring Boot 优点
+    独立运行
+    简化配置
+    自动配置
+    无代码生成和XML配置
+    应用监控
+    上手容易
+
+Spring Boot 的配置文件有哪几种格式？它们有什么区别？
+    .properties 和 .yml，它们的区别主要是书写格式不同
+    1).properties
+        app.user.name = javastack
+    2).yml
+        app:
+          user:
+            name: javastack
+
+Spring Boot 的核心注解是哪个？它主要由哪几个注解组成的？
+    启动类上面的注解是@SpringBootApplication，它也是 Spring Boot 的核心注解，主要组合包含了以下 3 个注解：
+
+    @SpringBootConfiguration：组合了 @Configuration 注解，实现配置文件的功能。
+    @EnableAutoConfiguration：打开自动配置的功能
+    @ComponentScan：Spring组件扫描。
+
+Spring Boot 支持哪些日志框架？推荐和默认的日志框架是哪个？
+    Spring Boot 支持 Java Util Logging, Log4j2, Lockback 作为日志框架，如果你使用 Starters 启动器，
+    Spring Boot 将使用 Logback 作为默认日志框架
