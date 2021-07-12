@@ -44,7 +44,7 @@ Runnable和Callable的区别
 
 sleep()和wait()的区别
     sleep()来自Thread，wait()来自Object
-    sleep()不释放锁，wait()释放锁
+    sleep()不需要释放锁，wait()需要释放锁
     sleep()时间到会自动恢复；wait()可以使用notify()/notifyAll()直接唤醒
 
 notify和notifyAll的区别
@@ -61,7 +61,6 @@ synchronized和Lock的区别
     synchronized不需要手动获取锁和释放锁，使用简单，发生异常会自动释放锁，不会造成死锁
     Lock需要自己加锁和释放锁，如果使用不当没有unLock()去释放锁就会造成死锁
     通过Lock可以知道有没有成功获取锁，而synchronized没法办到
-    lock()加锁 unLock()释放锁
     性能上面讲的话 Lock效率高一些
 
 synchronized和volatile区别

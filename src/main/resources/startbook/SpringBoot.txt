@@ -27,5 +27,5 @@ Spring Boot 的核心注解是哪个？它主要由哪几个注解组成的？
     @ComponentScan：Spring组件扫描。
 
 Spring Boot 支持哪些日志框架？推荐和默认的日志框架是哪个？
-    Spring Boot 支持 Java Util Logging, Log4j2, Lockback 作为日志框架，如果你使用 Starters 启动器，
+    Spring Boot 支持 Java Util Logging, Log4j, Lockback 作为日志框架，如果你使用 Starters 启动器，
     Spring Boot 将使用 Logback 作为默认日志框架
