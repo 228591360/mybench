@@ -1,3 +1,23 @@
+spring 有哪些主要模块？
+    spring core：框架的最基础部分，提供 ioc 和依赖注入特性。
+    spring context：构建于 core 封装包基础上的 context 封装包，提供了一种框架式的对象访问方法。
+    spring dao：Data Access Object 提供了JDBC的抽象层。
+    spring aop：提供了面向切面的编程实现，让你可以自定义拦截器、切点等。
+    spring web：提供了针对 Web 开发的集成特性，例如文件上传，利用 servlet listeners 进行 ioc 容器初始化和针对 Web 的 ApplicationContext。
+    spring web mvc：spring 中的 mvc 封装包提供了 Web 应用的 Model-View-Controller（MVC）的实现。
+
+
+spring是怎么全局处理异常的
+    @ExceptionHandler：统一处理某一类异常，从而能够减少代码重复率和复杂度
+    @ControllerAdvice：异常集中处理，更好的使业务逻辑与异常处理剥离开
+    @ResponseStatus：可以将某种异常映射为HTTP状态码
+
+spring的aop和@aspectj区别
+    1、织入的时期不同
+    Spring Aop采用的动态织入，而Aspectj是静态织入。静态织入：指在编译时期就织入，即：编译出来的class文件，字节码就已经被织入了。
+    2、从使用对象不同
+    Spring AOP的通知是基于该对象是SpringBean对象才可以，而AspectJ可以在任何Java对象上应用通知
+
 Spring的AOP和IOC是什么？使用场景有哪些？
     AOP：面向切面编程。即在一个功能模块中新增其他功能  例如方法做日志
     IOC：依赖注入或者叫做控制反转。
@@ -27,9 +47,9 @@ IOC三种注入方式
         CGLib是一个强大、高性能的Code生产类库，可以实现运行期动态扩展java类，Spring在运行期间通过 CGlib继承要被动态代理的类，重写父类的方法，实现AOP面向切面编程呢。
 
     区别：
-        JDK动态代理需要使用接口的方式，是基于接口的，假如将以上JDK动态代理的例子中UserService这个接口去掉，直接写它的实现类，那么则会报错，因为必须要写接口
-        cglib则不需要使用接口，是基于继承实现的，直接创建实现类即可，比如以上cglib动态代理的例子，无需写接口
-        Spring的代理底层使用的就是这两种代理，可以根据需要，指定具体使用哪种代理生成机制（默认为JDK动态代理）
+        Spring的代理底层使用的就是JDK动态代理和CGLib动态代理这两种代理，可以根据需要，指定具体使用哪种代理生成机制（默认为JDK动态代理）
+        JDK动态代理需要使用接口的方式，是基于接口的，接口去掉直接写它的实现类，那么则会报错
+        cglib则不需要使用接口，是基于继承实现的，直接创建实现类
         基本规则是：目标业务类如果有接口则用JDK代理，没有接口则用CGLib代理
         JDK动态代理是面向接口，在创建代理实现类时比CGLib要快，创建代理速度快。
         CGLib动态代理是通过字节码底层继承要代理类来实现（如果被代理类被final关键字所修饰，那么抱歉会失败），在创建代理这一块没有JDK动态代理快，但是运行速度比JDK动态代理要快。
