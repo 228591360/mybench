@@ -59,5 +59,7 @@ HashMap 与 HashTable 有什么区别？
     基于你的collection的大小，也许向HashMap中添加元素会更快，将map换为TreeMap进行有序key的遍历。
 
 HashMap 和 ConcurrentHashMap 的区别
-    ConcurrentHashMap对整个桶数组进行了分割分段(Segment)，然后在每一个分段上都用lock锁进行保护，相对于HashTable的synchronized锁的粒度更精细了一些，并发性能更好，而HashMap没有锁机制，不是线程安全的。
+    ConcurrentHashMap对整个桶数组进行了分割分段(Segment)，
+    然后在每一个分段上都用lock锁进行保护，
+    相对于HashTable的synchronized锁的粒度更精细了一些，并发性能更好，而HashMap没有锁机制，不是线程安全的。
     HashMap的键值对允许有null，但是ConCurrentHashMap都不允许。

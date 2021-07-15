@@ -63,6 +63,7 @@ notify和notifyAll的区别
     并发：多个任务在同一个CPU核上，一个处理器处理多个任务
 
 synchronized和Lock的区别
+    都属于悲观锁
     首先synchronized是java内置关键字，在jvm层面，Lock是个java类；
     synchronized可以给类、方法、代码块加锁；而Lock只能给代码块加锁
     synchronized不需要手动获取锁和释放锁，使用简单，发生异常会自动释放锁，不会造成死锁
