@@ -34,9 +34,9 @@
         分布式锁确保同一时间只有一个系统
 
 4.redis有哪些数据类型 分别在哪些场景下用
-    string  最基本类型，普通set get
-    hash 类似map的一种结构 存放对象  key=100 value={"id":100,name="zhangsan"}
-    list  有序可重复列表 粉丝列表 评论类列表 value=[zhangsan,lisi,wangwu]  可做简单消息队列，除了Redis自身的发布/订阅模式，队列
+    string  最基本类型，普通set get    秒杀、详情页、点赞、评论
+    hash 类似map的一种结构 存放对象  key=100 value={"id":100,name="zhangsan"}  点赞、收藏、详情页
+    list  有序可重复列表 粉丝列表 评论类列表 value=[zhangsan,lisi,wangwu]  可做简单消息队列
     set  无序集合，自动去重  基与set玩交集、并集、差集操作。比如交集可以玩微博共同粉丝、公司年会抽奖（每次抽中一个员工并移除）
     sorted set（zset） 排序的set，去重但可以排序 可以自定义排序  做排行榜
 
