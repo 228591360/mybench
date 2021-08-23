@@ -46,15 +46,4 @@ public class UserServerImpl extends ServiceImpl<UserMapper, User> implements Use
     public int createUser(User user) {
         return userMapper.insert(user);
     }
-
-    public static void main(String[] args) {
-        Map userInfoMap = new HashMap();
-        userInfoMap.put("age","26");
-        userInfoMap.put("name","用户名XXX");
-        User user = new User();
-        User userParse = JSON.parseObject(JSON.toJSONString(userInfoMap), User.class);
-        BeanUtils.copyProperties(userParse,user);
-        System.out.println(user);
-
-    }
 }
