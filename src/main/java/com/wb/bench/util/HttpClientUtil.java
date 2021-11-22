@@ -141,7 +141,8 @@ public class HttpClientUtil {
             httpPost.setHeader("Connection","Keep-Alive");
             httpPost.setHeader("Content-Type","application/json;charset=utf-8");
             if(StringUtils.isNotEmpty(token_header)) {
-                httpPost.setHeader("x-authentication-token", token_header);
+               // httpPost.setHeader("x-authentication-token", token_header);
+                httpPost.setHeader("x-mvTrackId-token", token_header);
             }
 
             StringEntity entity = new StringEntity(json);
