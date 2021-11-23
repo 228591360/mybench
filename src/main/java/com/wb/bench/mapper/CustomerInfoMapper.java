@@ -1,7 +1,7 @@
 package com.wb.bench.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.wb.bench.entity.User;
+import com.wb.bench.entity.CustomerInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -11,6 +11,6 @@ import java.util.List;
  * @Date: 2020/12/8 11:02
  */
 @Mapper
-public interface UserMapper extends BaseMapper<User> {
-    List<User> queryUser();
+public interface CustomerInfoMapper extends BaseMapper<CustomerInfo> {
+    List<CustomerInfo> queryCustomerInfo();
 }
