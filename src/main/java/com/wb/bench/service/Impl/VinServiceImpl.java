@@ -28,8 +28,6 @@ public class VinServiceImpl implements VinService {
         vinMap.put("vin",vinRequest.getVin());
         map.put("param",vinMap);
         String jsonString = JSON.toJSONString(map);
-        String s = HttpClientUtil.doPostJson(URL, jsonString, mvTrackId);
-        System.out.println(s);
         return  HttpClientUtil.doPostJson(URL, jsonString,mvTrackId);
     }
 
@@ -52,19 +50,19 @@ public class VinServiceImpl implements VinService {
     }
 
     public static void main(String[] args) throws Exception {
-//        String mvTrackId ="20170926105632_VehicleInsuranceInfo_zhongpuweixin_sa23jhfu";
-//        Map map = new HashMap<String ,Object>();
-//        map.put("loginName","zhongpuweixin");
-//        map.put("pwd","zhongpuweixin1205");
-//        map.put("serviceName","VehicleInsuranceInfo");
-//        Map map1 = new HashMap<String ,String>();
-//        map1.put("vin","LHGCR1657E8041428");
-//        map.put("param",map1);
-//        String jsonString = JSON.toJSONString(map);
-//        System.out.println(jsonString);
-//        String s = HttpClientUtil.doPostJson("https://www.miniscores.net:8313/CreditFunc/v2.1/VehicleInsuranceInfo", jsonString,mvTrackId);
-//        System.out.println(s);
-
+        String mvTrackId ="20170926105632_VehicleInsuranceInfo_zhongpuweixin_sa23jhfu";
+        Map map = new HashMap<String ,Object>();
+        map.put("loginName","zhongpuweixin");
+        map.put("pwd","zhongpuweixin1205");
+        map.put("serviceName","VehicleInsuranceInfo");
+        Map map1 = new HashMap<String ,String>();
+        map1.put("vin","LHGCR1657E8041428");
+        map.put("param",map1);
+        String jsonString = JSON.toJSONString(map);
+        System.out.println(jsonString);
+        String s = HttpClientUtil.doPostJson("https://www.miniscores.net:8313/CreditFunc/v2.1/VehicleInsuranceInfo", jsonString,mvTrackId);
+        System.out.println(s);
+/*
         Map map = new LinkedHashMap<String ,Object>();
         map.put("customerId","customerId");
         Map vinMap = new HashMap<String ,String>();
@@ -79,6 +77,6 @@ public class VinServiceImpl implements VinService {
         map.put("sign",sign);
         System.out.println(map);
         String s = HttpClientUtil.doPostJson("https://host/v3/entapi.qucent.cn/api", map.toString(),null);
-        System.out.println(s);
+        System.out.println(s);*/
     }
 }
