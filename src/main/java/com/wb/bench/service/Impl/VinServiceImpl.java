@@ -5,13 +5,8 @@ import com.wb.bench.request.VinRequest;
 import com.wb.bench.service.VinService;
 import com.wb.bench.util.HttpClientUtil;
 import com.wb.bench.util.MD5Util;
-import lombok.Data;
-import org.apache.tomcat.jni.SSL;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -33,8 +28,9 @@ public class VinServiceImpl implements VinService {
         vinMap.put("vin",vinRequest.getVin());
         map.put("param",vinMap);
         String jsonString = JSON.toJSONString(map);
-        HttpClientUtil.doPostJson(URL, jsonString,mvTrackId);
-       return  HttpClientUtil.doPostJson(URL, jsonString,mvTrackId);
+        String s = HttpClientUtil.doPostJson(URL, jsonString, mvTrackId);
+        System.out.println(s);
+        return  HttpClientUtil.doPostJson(URL, jsonString,mvTrackId);
     }
 
     @Override

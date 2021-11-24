@@ -1,7 +1,6 @@
 package com.wb.bench.controller;
 
-import com.wb.bench.common.R;
-import com.wb.bench.common.Result;
+import com.wb.bench.base.BaseResponse;
 import com.wb.bench.entity.CustomerInfo;
 import com.wb.bench.request.CustomerInfoRequest;
 import com.wb.bench.service.CustomerInfoServer;
@@ -27,24 +26,24 @@ public class CustomerInfoController {
     private CustomerInfoServer customerInfoServer;
 
     @GetMapping("/queryCustomerInfo")
-    public Result<List<CustomerInfo>> queryCustomerInfo() {
-        return R.ok(customerInfoServer.queryCustomerInfo());
+    public BaseResponse<List<CustomerInfo>> queryCustomerInfo() {
+        return BaseResponse.success(customerInfoServer.queryCustomerInfo());
     }
 
     @GetMapping("/queryCustomerInfoById")
-    public Result<CustomerInfo> queryCustomerInfoById(@Param("customerId") String customerId) {
-        return R.ok(customerInfoServer.queryCustomerInfoById(customerId));
+    public BaseResponse<CustomerInfo> queryCustomerInfoById(@Param("customerId") String customerId) {
+        return BaseResponse.success(customerInfoServer.queryCustomerInfoById(customerId));
     }
 
     @GetMapping("/deleteCustomerInfoById")
-    public Result deleteCustomerInfoById(@Param("customerId") String customerId) {
+    public BaseResponse deleteCustomerInfoById(@Param("customerId") String customerId) {
         customerInfoServer.deleteCustomerInfoById(customerId);
-        return R.ok();
+        return BaseResponse.SUCCESSFUL();
     }
 
     @PostMapping("/createCustomerInfo")
-    public Result createCustomerInfo(@RequestBody @Validated CustomerInfoRequest request) {
-        return R.ok(customerInfoServer.createCustomerInfo(request));
+    public BaseResponse createCustomerInfo(@RequestBody @Validated CustomerInfoRequest request) {
+        return BaseResponse.success(customerInfoServer.createCustomerInfo(request));
     }
 
 }

@@ -2,6 +2,7 @@ package com.wb.bench.service.Impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wb.bench.entity.CustomerInfo;
+import com.wb.bench.exception.BaseBusinessException;
 import com.wb.bench.mapper.CustomerInfoMapper;
 import com.wb.bench.request.LoginRequest;
 import com.wb.bench.response.CustomerInfoResponse;
@@ -18,7 +19,7 @@ public class LoginServiceImpl implements LoginService {
     private CustomerInfoMapper customerInfoMapper;
 
     @Override
-    public CustomerInfoResponse login(LoginRequest request) {
+    public CustomerInfoResponse login(LoginRequest request) throws BaseBusinessException {
         QueryWrapper<CustomerInfo> customerInfoQueryWrapper = new QueryWrapper<>();
         customerInfoQueryWrapper.eq("customer_account",request.getCustomerAccount());
         customerInfoQueryWrapper.eq("customer_password",request.getCustomerPassword());

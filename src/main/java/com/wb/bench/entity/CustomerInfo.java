@@ -58,7 +58,7 @@ public class CustomerInfo implements Serializable {
     /**
      * 客户描述
      */
-    @Column(name = "customer_account")
+    @Column(name = "customer_desc")
     private String customerDesc;
 
     /**

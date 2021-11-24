@@ -1,7 +1,6 @@
 package com.wb.bench.controller;
 
-import com.wb.bench.common.R;
-import com.wb.bench.common.Result;
+import com.wb.bench.base.BaseResponse;
 import com.wb.bench.request.VinRequest;
 import com.wb.bench.service.VinService;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +18,14 @@ public class VinController {
     private VinService vinService;
 
     @PostMapping("/queryInfo")
-    public Result queryInfo(@RequestBody @Validated VinRequest vinRequest) throws Exception {
+    public BaseResponse queryInfo(@RequestBody @Validated VinRequest vinRequest) throws Exception {
         String s = vinService.queryInfo(vinRequest);
-        return R.ok(s);
+        return BaseResponse.success(s);
     }
 
     @PostMapping("/v1/queryInfo")
-    public Result queryVinInfo(@RequestBody @Validated VinRequest vinRequest) throws Exception {
+    public BaseResponse queryVinInfo(@RequestBody @Validated VinRequest vinRequest) throws Exception {
         String s = vinService.queryInfo(vinRequest);
-        return R.ok(s);
+        return BaseResponse.success(s);
     }
 }

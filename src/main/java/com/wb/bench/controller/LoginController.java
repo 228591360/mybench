@@ -1,7 +1,7 @@
 package com.wb.bench.controller;
 
-import com.wb.bench.common.R;
-import com.wb.bench.common.Result;
+import com.wb.bench.base.BaseResponse;
+import com.wb.bench.exception.BaseBusinessException;
 import com.wb.bench.request.LoginRequest;
 import com.wb.bench.response.CustomerInfoResponse;
 import com.wb.bench.service.LoginService;
@@ -20,7 +20,7 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping("/login")
-    public Result<CustomerInfoResponse> login(@RequestBody @Validated LoginRequest request) {
-        return R.ok(loginService.login(request));
+    public BaseResponse<CustomerInfoResponse> login(@RequestBody @Validated LoginRequest request)throws BaseBusinessException {
+        return BaseResponse.success(loginService.login(request));
     }
 }
