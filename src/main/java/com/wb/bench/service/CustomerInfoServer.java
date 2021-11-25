@@ -1,7 +1,9 @@
 package com.wb.bench.service;
 
+import com.wb.bench.entity.BasePage;
 import com.wb.bench.entity.CustomerInfo;
 import com.wb.bench.request.CustomerInfoRequest;
+import com.wb.bench.response.CustomerInfoResponse;
 
 import java.util.List;
 
@@ -10,8 +12,9 @@ import java.util.List;
  * @Date: 2020/12/8 11:03
  */
 public interface CustomerInfoServer {
+    BasePage<CustomerInfoResponse> queryPageList(CustomerInfoRequest customerInfoRequest);
 
-    List<CustomerInfo> queryCustomerInfo();
+    List<CustomerInfoResponse> queryCustomerInfo();
 
     CustomerInfo queryCustomerInfoById(String customerId);
 

@@ -1,9 +1,12 @@
 package com.wb.bench.request;
+
+import com.wb.bench.entity.PageEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,7 +19,7 @@ import java.time.LocalDateTime;
 @ApiModel
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerInfoRequest implements Serializable {
+public class CustomerInfoRequest extends PageEntity implements Serializable {
 
     /**
      * uuid

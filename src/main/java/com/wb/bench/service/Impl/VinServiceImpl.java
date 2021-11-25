@@ -1,21 +1,29 @@
 package com.wb.bench.service.Impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.wb.bench.entity.CustomerInfo;
+import com.wb.bench.mapper.CustomerInfoMapper;
 import com.wb.bench.request.VinRequest;
 import com.wb.bench.service.VinService;
 import com.wb.bench.util.HttpClientUtil;
 import com.wb.bench.util.MD5Util;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class VinServiceImpl implements VinService {
     final String URL ="https://www.miniscores.net:8313/CreditFunc/v2.1/VehicleInsuranceInfo";
     final String customerId = "cddd****************087475801189";
     final String QXURL ="entapiceshi.qucent.cn/api";
+
+    @Autowired
+    private CustomerInfoMapper customerInfoMapper;
 
     @Override
     public String queryInfo(VinRequest vinRequest) throws Exception {
@@ -33,6 +41,13 @@ public class VinServiceImpl implements VinService {
 
     @Override
     public String queryVinInfo(VinRequest vinRequest) throws Exception {
+        QueryWrapper<CustomerInfo> customerInfoQueryWrapper = new QueryWrapper<>();
+        customerInfoQueryWrapper.eq("customer_account",vinRequest.getCustomerAccount());
+        customerInfoQueryWrapper.eq("customer_password",vinRequest.getCustomerPassword());
+        CustomerInfo customerInfo = customerInfoMapper.selectOne(customerInfoQueryWrapper);
+        if(Objects.isNull(customerInfo)){
+            throw new RuntimeException("客户未注册");
+        }
         Map map = new LinkedHashMap<String ,Object>();
         map.put("customerId",customerId);
         Map vinMap = new HashMap<String ,String>();
