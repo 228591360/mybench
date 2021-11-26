@@ -76,7 +76,7 @@ public class CustomerInfo implements Serializable {
     /**
      * 授信额度
      */
-    @Column(name = "credit_account")
+    @Column(name = "credit_amount")
     private BigDecimal creditAmount;
 
     /**

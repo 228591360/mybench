@@ -10,9 +10,11 @@ import com.wb.bench.service.CustomerInfoServer;
 import com.wb.bench.service.RechargeService;
 import com.wb.bench.util.KsBeanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
+@Service
 public class RechargeServiceImpl implements RechargeService {
     @Autowired
     private CustomerInfoMapper customerInfoMapper;

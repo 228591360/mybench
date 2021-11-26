@@ -56,8 +56,9 @@ public class CustomerInfoServerImpl extends ServiceImpl<CustomerInfoMapper, Cust
     }
 
     @Override
-    public CustomerInfo queryCustomerInfoById(String customerId) {
-        return customerInfoMapper.selectById(customerId);
+    public CustomerInfoResponse queryCustomerInfoById(String customerId) {
+        CustomerInfo customerInfo = customerInfoMapper.selectById(customerId);
+        return KsBeanUtil.convert(customerInfo,CustomerInfoResponse.class);
     }
 
     @Override

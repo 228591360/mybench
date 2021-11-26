@@ -1,7 +1,6 @@
 package com.wb.bench.service;
 
 import com.wb.bench.entity.BasePage;
-import com.wb.bench.entity.CustomerInfo;
 import com.wb.bench.request.CustomerInfoRequest;
 import com.wb.bench.response.CustomerInfoResponse;
 
@@ -16,7 +15,7 @@ public interface CustomerInfoServer {
 
     List<CustomerInfoResponse> queryCustomerInfo();
 
-    CustomerInfo queryCustomerInfoById(String customerId);
+    CustomerInfoResponse queryCustomerInfoById(String customerId);
 
     int deleteCustomerInfoById(String customerId);
 

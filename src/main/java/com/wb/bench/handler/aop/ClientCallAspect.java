@@ -1,9 +1,7 @@
 package com.wb.bench.handler.aop;
 
 import com.alibaba.fastjson.JSONObject;
-import com.wb.bench.base.BaseResponse;
 import com.wb.bench.exception.SbcRuntimeException;
-import com.wb.bench.util.CommonErrorCode;
 import com.wb.bench.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -42,17 +40,17 @@ public class ClientCallAspect {
 
         String requestInfo = DateUtil.nowTime() + str + "请求参数：" + getMessage(joinPoint);
 
-        String errCode = ((BaseResponse) res).getCode();
-        String errMsg = ((BaseResponse) res).getMessage();
-        Object context = ((BaseResponse) res).getErrorData();
-        if (!CommonErrorCode.SUCCESSFUL.equals(errCode)) {
-            log.error(str + "出现异常！请求的接口信息：{}，接口返回信息：{}", requestInfo, res);
-            if (context != null) {
-                throw new SbcRuntimeException(context, errCode);
-            } else {
-                throw new SbcRuntimeException(errCode, errMsg);
-            }
-        }
+//        String errCode = ((BaseResponse) res).getCode();
+//        String errMsg = ((BaseResponse) res).getMessage();
+//        Object context = ((BaseResponse) res).getErrorData();
+//        if (!CommonErrorCode.SUCCESSFUL.equals(errCode)) {
+//            log.error(str + "出现异常！请求的接口信息：{}，接口返回信息：{}", requestInfo, res);
+//            if (context != null) {
+//                throw new SbcRuntimeException(context, errCode);
+//            } else {
+//                throw new SbcRuntimeException(errCode, errMsg);
+//            }
+//        }
         // todo 耗CPU
 //        log.info(DateUtil.nowTime(), str + "返回参数：", JSONObject.toJSONString(res));
     }

@@ -1,10 +1,8 @@
 package com.wb.bench.controller;
 
-import com.wb.bench.base.BaseResponse;
 import com.wb.bench.common.R;
 import com.wb.bench.common.Result;
 import com.wb.bench.entity.BasePage;
-import com.wb.bench.entity.CustomerInfo;
 import com.wb.bench.request.CustomerInfoRequest;
 import com.wb.bench.response.CustomerInfoResponse;
 import com.wb.bench.service.CustomerInfoServer;
@@ -31,11 +29,11 @@ public class CustomerInfoController {
     private CustomerInfoServer customerInfoServer;
 
 
-    @ApiOperation("打卡、补打卡列表")
-    @PostMapping(value = "/crmClockIn/queryPageList")
+    @ApiOperation("客户列表分页")
+    @PostMapping(value = "/queryPageList")
     public Result<BasePage<CustomerInfoResponse>> queryPageList(@RequestBody @Validated CustomerInfoRequest customerInfoRequest){
-        BasePage<CustomerInfoResponse> crmClockInPageVOBasePage = customerInfoServer.queryPageList(customerInfoRequest);
-        return R.ok();
+        BasePage<CustomerInfoResponse> customerInfoResponseBasePage = customerInfoServer.queryPageList(customerInfoRequest);
+        return R.ok(customerInfoResponseBasePage);
     }
 
     /**
@@ -43,8 +41,8 @@ public class CustomerInfoController {
      * @return
      */
     @GetMapping("/queryCustomerInfo")
-    public BaseResponse<List<CustomerInfoResponse>> queryCustomerInfo() {
-        return BaseResponse.success(customerInfoServer.queryCustomerInfo());
+    public Result<List<CustomerInfoResponse>> queryCustomerInfo() {
+        return R.ok(customerInfoServer.queryCustomerInfo());
     }
 
     /**
@@ -53,8 +51,8 @@ public class CustomerInfoController {
      * @return
      */
     @GetMapping("/queryCustomerInfoById")
-    public BaseResponse<CustomerInfo> queryCustomerInfoById(@Param("customerId") String customerId) {
-        return BaseResponse.success(customerInfoServer.queryCustomerInfoById(customerId));
+    public Result<CustomerInfoResponse> queryCustomerInfoById(@Param("customerId") String customerId) {
+        return R.ok(customerInfoServer.queryCustomerInfoById(customerId));
     }
 
     /**
@@ -63,9 +61,9 @@ public class CustomerInfoController {
      * @return
      */
     @GetMapping("/deleteCustomerInfoById")
-    public BaseResponse deleteCustomerInfoById(@Param("customerId") String customerId) {
+    public Result deleteCustomerInfoById(@Param("customerId") String customerId) {
         customerInfoServer.deleteCustomerInfoById(customerId);
-        return BaseResponse.SUCCESSFUL();
+        return R.ok();
     }
 
     /**
@@ -74,8 +72,8 @@ public class CustomerInfoController {
      * @return
      */
     @PostMapping("/createCustomerInfo")
-    public BaseResponse createCustomerInfo(@RequestBody @Validated CustomerInfoRequest request) {
-        return BaseResponse.success(customerInfoServer.createCustomerInfo(request));
+    public Result createCustomerInfo(@RequestBody @Validated CustomerInfoRequest request) {
+        return R.ok(customerInfoServer.createCustomerInfo(request));
     }
 
 }

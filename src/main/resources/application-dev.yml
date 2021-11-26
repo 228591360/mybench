@@ -6,9 +6,9 @@ server:
 #数据源配置
 spring:
   datasource:
-    url: jdbc:mysql://10.0.21.34:3306/sbc-customer?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://127.0.0.1:3306/vin?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
     username: root
-    password: Deli2019,
+    password: 12345678
     driver-class-name: com.mysql.jdbc.Driver
   redis:
     # 连接超时时间（毫秒）
