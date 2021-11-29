@@ -3,7 +3,10 @@ package com.wb.bench.service.Impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wb.bench.entity.CustomerInfo;
+import com.wb.bench.entity.CustomerService;
+import com.wb.bench.exception.SbcRuntimeException;
 import com.wb.bench.mapper.CustomerInfoMapper;
+import com.wb.bench.mapper.CustomerServiceMapper;
 import com.wb.bench.request.VinRequest;
 import com.wb.bench.service.VinService;
 import com.wb.bench.util.HttpClientUtil;
@@ -25,6 +28,9 @@ public class VinServiceImpl implements VinService {
     @Autowired
     private CustomerInfoMapper customerInfoMapper;
 
+    @Autowired
+    private CustomerServiceMapper customerServiceMapper;
+
     @Override
     public String queryInfo(VinRequest vinRequest) throws Exception {
         String mvTrackId ="20170926105632_VehicleInsuranceInfo_zhongpuweixin_sa23jhfu";
@@ -40,13 +46,19 @@ public class VinServiceImpl implements VinService {
     }
 
     @Override
-    public String queryVinInfo(VinRequest vinRequest) throws Exception {
+    public String queryVinInfo(VinRequest vinRequest){
         QueryWrapper<CustomerInfo> customerInfoQueryWrapper = new QueryWrapper<>();
         customerInfoQueryWrapper.eq("customer_account",vinRequest.getCustomerAccount());
         customerInfoQueryWrapper.eq("customer_password",vinRequest.getCustomerPassword());
         CustomerInfo customerInfo = customerInfoMapper.selectOne(customerInfoQueryWrapper);
         if(Objects.isNull(customerInfo)){
-            throw new RuntimeException("客户未注册");
+            throw new SbcRuntimeException("客户未注册");
+        }
+        QueryWrapper<CustomerService> customerServiceQueryWrapper = new QueryWrapper<>();
+        customerServiceQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
+        customerServiceQueryWrapper.eq("service_id",vinRequest.getServiceId());
+        if(customerServiceMapper.selectCount(customerServiceQueryWrapper)<0){
+            throw new SbcRuntimeException("无权限调用服务");
         }
         Map map = new LinkedHashMap<String ,Object>();
         map.put("customerId",customerId);
@@ -57,7 +69,7 @@ public class VinServiceImpl implements VinService {
         map.put("productCode","BA610011");
         map.put("encryptType","false");
         map.put("reqTime", System.currentTimeMillis());
-        map.put("version","=V001");
+        map.put("version","V001");
         String sign = (MD5Util.md5Hex(map.toString(), "utf-8"));
         map.put("sign",sign);
         System.out.println(map);
@@ -87,7 +99,7 @@ public class VinServiceImpl implements VinService {
         map.put("productCode","BA610011");
         map.put("encryptType","false");
         map.put("reqTime", System.currentTimeMillis());
-        map.put("version","=V001");
+        map.put("version","V001");
         String sign = (MD5Util.md5Hex(map.toString(), "utf-8"));
         map.put("sign",sign);
         System.out.println(map);

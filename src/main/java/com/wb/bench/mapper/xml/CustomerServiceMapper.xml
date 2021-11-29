@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wb.bench.mapper.CustomerServiceMapper">
+
+    <delete id="deleteByCustomerIdAndServiceId">
+        delete from customer_service where customer_id = #{customerId} and service_id =#{serviceId}
+    </delete>
+</mapper>

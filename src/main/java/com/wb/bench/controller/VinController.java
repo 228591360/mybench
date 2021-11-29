@@ -25,7 +25,7 @@ public class VinController {
     }
 
     @PostMapping("/v1/queryInfo")
-    public BaseResponse queryVinInfo(@RequestBody @Validated VinRequest vinRequest) throws Exception {
+    public BaseResponse queryVinInfo(@RequestBody @Validated VinRequest vinRequest){
         String s = vinService.queryVinInfo(vinRequest);
         return BaseResponse.success(JSON.parse(s));
     }
