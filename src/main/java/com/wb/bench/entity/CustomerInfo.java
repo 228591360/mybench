@@ -1,4 +1,5 @@
 package com.wb.bench.entity;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,8 +29,9 @@ public class CustomerInfo implements Serializable {
      * uuid
      */
     @Id
+    @TableId("customer_id")
     @Column(name = "customer_id")
-    private Long customerId;
+    private String customerId;
 
     /**
      * 公司名称

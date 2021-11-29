@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -24,7 +23,7 @@ public class CustomerInfoResponse implements Serializable {
      * uuid
      */
     @ApiModelProperty(name = "uuid")
-    private Long customerId;
+    private String customerId;
 
     /**
      * 公司名称

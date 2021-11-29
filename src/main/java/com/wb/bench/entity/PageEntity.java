@@ -15,7 +15,7 @@ public class PageEntity {
     private Integer page = 1;
 
     @ApiModelProperty("每页展示条数")
-    private Integer limit = 15;
+    private Integer limit = 10;
 
     @ApiModelProperty(value = "是否分页，0:不分页 1 分页", allowableValues = "0,1")
     private Integer pageType = 1;

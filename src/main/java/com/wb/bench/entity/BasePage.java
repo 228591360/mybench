@@ -29,9 +29,9 @@ public class BasePage<T> implements IPage<T> {
     private long totalRow = 0;
 
     /**
-     * 每页显示条数，默认 15
+     * 每页显示条数，默认 10
      */
-    private long pageSize = 15;
+    private long pageSize = 10;
 
     /**
      * 当前页
@@ -51,22 +51,6 @@ public class BasePage<T> implements IPage<T> {
      * 是否进行 count 查询
      */
     private boolean isSearchCount = true;
-
-    /**
-     * 额外数据
-     */
-    private Object extraData;
-
-    /**
-     * 额外数据
-     */
-    private Object extraData2;
-
-    /**
-     * 额外数据
-     */
-    private Object extraData3;
-
 
     public BasePage() {
 
@@ -260,31 +244,6 @@ public class BasePage<T> implements IPage<T> {
     @JsonIgnore
     public long getPages() {
         return getTotalPage();
-    }
-
-    public Object getExtraData() {
-        return extraData;
-    }
-
-    public Object getExtraData2() {
-        return extraData2;
-    }
-
-    public Object getExtraData3() {
-        return extraData3;
-    }
-
-    public void setExtraData(Object extraData) {
-        this.extraData = extraData;
-    }
-
-    public void setExtraData2(Object extraData2) {
-        this.extraData2 = extraData2;
-    }
-
-    public void setExtraData3(Object extraData3) {
-
-        this.extraData3 = extraData3;
     }
 
 

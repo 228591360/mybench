@@ -8,9 +8,7 @@ import com.wb.bench.response.CustomerInfoResponse;
 import com.wb.bench.service.CustomerInfoServer;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,29 +38,29 @@ public class CustomerInfoController {
      * 客户列表
      * @return
      */
-    @GetMapping("/queryCustomerInfo")
-    public Result<List<CustomerInfoResponse>> queryCustomerInfo() {
+    @PostMapping("/queryCustomerInfo")
+    public Result<List<CustomerInfoResponse>> queryCustomerInfo(@RequestBody @Validated CustomerInfoRequest customerInfoRequest) {
         return R.ok(customerInfoServer.queryCustomerInfo());
     }
 
     /**
      * 客户详情
-     * @param customerId
+     * @param customerInfoRequest
      * @return
      */
-    @GetMapping("/queryCustomerInfoById")
-    public Result<CustomerInfoResponse> queryCustomerInfoById(@Param("customerId") String customerId) {
-        return R.ok(customerInfoServer.queryCustomerInfoById(customerId));
+    @PostMapping("/queryCustomerInfoById")
+    public Result<CustomerInfoResponse> queryCustomerInfoById(@RequestBody @Validated CustomerInfoRequest customerInfoRequest) {
+        return R.ok(customerInfoServer.queryCustomerInfoById(customerInfoRequest.getCustomerId()));
     }
 
     /**
      * 删除
-     * @param customerId
+     * @param customerInfoRequest
      * @return
      */
-    @GetMapping("/deleteCustomerInfoById")
-    public Result deleteCustomerInfoById(@Param("customerId") String customerId) {
-        customerInfoServer.deleteCustomerInfoById(customerId);
+    @PostMapping("/deleteCustomerInfoById")
+    public Result deleteCustomerInfoById(@RequestBody @Validated CustomerInfoRequest customerInfoRequest) {
+        customerInfoServer.deleteCustomerInfoById(customerInfoRequest.getCustomerId());
         return R.ok();
     }
 
@@ -71,9 +69,9 @@ public class CustomerInfoController {
      * @param request
      * @return
      */
-    @PostMapping("/createCustomerInfo")
-    public Result createCustomerInfo(@RequestBody @Validated CustomerInfoRequest request) {
-        return R.ok(customerInfoServer.createCustomerInfo(request));
+    @PostMapping("/editCustomerInfo")
+    public Result editCustomerInfo(@RequestBody @Validated CustomerInfoRequest request) {
+        return R.ok(customerInfoServer.editCustomerInfo(request));
     }
 
 }

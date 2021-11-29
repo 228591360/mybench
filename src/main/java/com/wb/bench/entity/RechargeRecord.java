@@ -1,5 +1,7 @@
 package com.wb.bench.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,14 +24,14 @@ import java.time.LocalDateTime;
 public class RechargeRecord implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
-    private Long id;
+    @TableId(type = IdType.AUTO)
+    private Integer id;
 
     /**
      * customerId
      */
-    @Id
     @Column(name = "customer_id")
-    private Long customerId;
+    private String customerId;
 
 
     /**
@@ -44,13 +46,4 @@ public class RechargeRecord implements Serializable {
     @Column(name = "recharge_time")
     private LocalDateTime rechargeTime;
 
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 }

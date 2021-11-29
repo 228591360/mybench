@@ -25,7 +25,7 @@ public class CustomerInfoRequest extends PageEntity implements Serializable {
      * uuid
      */
     @ApiModelProperty(name = "uuid")
-    private Long customerId;
+    private String customerId;
 
     /**
      * 公司名称

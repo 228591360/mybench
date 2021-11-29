@@ -19,5 +19,5 @@ public interface CustomerInfoServer {
 
     int deleteCustomerInfoById(String customerId);
 
-    Boolean createCustomerInfo(CustomerInfoRequest request);
+    Boolean editCustomerInfo(CustomerInfoRequest request);
 }

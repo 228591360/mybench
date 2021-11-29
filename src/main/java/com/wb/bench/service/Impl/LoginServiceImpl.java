@@ -3,6 +3,7 @@ package com.wb.bench.service.Impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wb.bench.entity.CustomerInfo;
 import com.wb.bench.exception.BaseBusinessException;
+import com.wb.bench.exception.SbcRuntimeException;
 import com.wb.bench.mapper.CustomerInfoMapper;
 import com.wb.bench.request.LoginRequest;
 import com.wb.bench.response.CustomerInfoResponse;
@@ -25,7 +26,7 @@ public class LoginServiceImpl implements LoginService {
         customerInfoQueryWrapper.eq("customer_password",request.getCustomerPassword());
         CustomerInfo customerInfo = customerInfoMapper.selectOne(customerInfoQueryWrapper);
         if(Objects.isNull(customerInfo)){
-            throw new RuntimeException("帐号或密码错误");
+            throw new SbcRuntimeException(1001,"帐号或密码错误");
         }
         CustomerInfoResponse customerInfoResponse = new CustomerInfoResponse();
         BeanUtils.copyProperties(customerInfo,customerInfoResponse);
