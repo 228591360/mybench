@@ -46,6 +46,12 @@ public class CustomerService implements Serializable {
     private String serviceName;
 
     /**
+     * 服务定价
+     */
+    @Column(name = "service_price")
+    private String servicePrice;
+
+    /**
      * 创建时间
      */
     @Column(name = "create_time")

@@ -10,5 +10,5 @@ public interface CustomerService {
 
     void deleteByCustomerIdAndServiceId(CustomerServiceRequest customerServiceRequest);
 
-    int create(CustomerServiceRequest customerServiceRequest);
+    boolean editCustomerService(CustomerServiceRequest customerServiceRequest);
 }

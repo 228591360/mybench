@@ -51,9 +51,9 @@ public class CustomerServiceController {
      * @param customerServiceRequest
      * @return
      */
-    @PostMapping("/createCustomerService")
-    public Result create(@RequestBody @Validated CustomerServiceRequest customerServiceRequest) {
-        return R.ok(customerService.create(customerServiceRequest));
+    @PostMapping("/editCustomerService")
+    public Result editCustomerService(@RequestBody @Validated CustomerServiceRequest customerServiceRequest) {
+        return R.ok(customerService.editCustomerService(customerServiceRequest));
     }
 
 }

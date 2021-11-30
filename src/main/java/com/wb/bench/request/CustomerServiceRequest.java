@@ -33,5 +33,10 @@ public class CustomerServiceRequest implements Serializable {
     @ApiModelProperty(name = "服务名称")
     private String serviceName;
 
+    /**
+     * 服务定价
+     */
+    @ApiModelProperty(name = "服务定价")
+    private String servicePrice;
 
 }
