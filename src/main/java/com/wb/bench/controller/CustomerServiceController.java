@@ -5,6 +5,8 @@ import com.wb.bench.common.Result;
 import com.wb.bench.request.CustomerServiceRequest;
 import com.wb.bench.response.CustomerServiceResponse;
 import com.wb.bench.service.CustomerService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +22,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
+@Api(description = "客户服务")
 public class CustomerServiceController {
     @Resource
     private CustomerService customerService;
@@ -30,6 +33,7 @@ public class CustomerServiceController {
      * @return
      */
     @PostMapping("/queryList")
+    @ApiOperation("客户服务列表")
     public Result<List<CustomerServiceResponse>> queryList(@RequestBody @Validated CustomerServiceRequest customerServiceRequest) {
         return R.ok(customerService.queryList(customerServiceRequest));
     }
@@ -41,17 +45,19 @@ public class CustomerServiceController {
      * @return
      */
     @PostMapping("/deleteByCustomerIdAndServiceId")
+    @ApiOperation("删除")
     public Result deleteByCustomerIdAndServiceId(@RequestBody @Validated CustomerServiceRequest customerServiceRequest) {
         customerService.deleteByCustomerIdAndServiceId(customerServiceRequest);
         return R.ok();
     }
 
     /**
-     * 创建
+     * 编辑
      * @param customerServiceRequest
      * @return
      */
     @PostMapping("/editCustomerService")
+    @ApiOperation("编辑")
     public Result editCustomerService(@RequestBody @Validated CustomerServiceRequest customerServiceRequest) {
         return R.ok(customerService.editCustomerService(customerServiceRequest));
     }

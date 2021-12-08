@@ -8,6 +8,7 @@ import com.wb.bench.request.CustomerInfoRequest;
 import com.wb.bench.request.RechargeRequest;
 import com.wb.bench.response.RechargeRecordResponse;
 import com.wb.bench.service.RechargeService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 
 @RestController
+@Api(description = "充值管理")
 public class RechargeController {
     @Resource
     private RechargeService rechargeService;
@@ -27,6 +29,7 @@ public class RechargeController {
      * @return
      * @throws BaseBusinessException
      */
+    @ApiOperation("充值")
     @PostMapping("/recharge")
     public Result recharge(@RequestBody @Validated RechargeRequest request){
         rechargeService.recharge(request);

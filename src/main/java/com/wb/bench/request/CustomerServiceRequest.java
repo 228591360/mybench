@@ -17,26 +17,26 @@ public class CustomerServiceRequest implements Serializable {
     /**
      * customerId
      */
-    @ApiModelProperty(name = "customer_id")
+    @ApiModelProperty(value = "customer_id")
     private String customerId;
 
 
     /**
      * 服务id
      */
-    @ApiModelProperty(name = "服务id")
+    @ApiModelProperty(value = "服务id")
     private String serviceId;
 
     /**
      * 服务名称
      */
-    @ApiModelProperty(name = "服务名称")
+    @ApiModelProperty(value = "服务名称")
     private String serviceName;
 
     /**
      * 服务定价
      */
-    @ApiModelProperty(name = "服务定价")
+    @ApiModelProperty(value = "服务定价")
     private String servicePrice;
 
 }

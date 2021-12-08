@@ -21,20 +21,20 @@ public class RechargeRecordResponse implements Serializable {
     /**
      * customerId
      */
-    @ApiModelProperty(name = "customer_id")
+    @ApiModelProperty(value = "customer_id")
     private String customerId;
 
 
     /**
      * 本次充值金额
      */
-    @ApiModelProperty(name = "本次充值金额")
+    @ApiModelProperty(value = "本次充值金额")
     private BigDecimal rechargeAccount;
 
     /**
      * 充值时间
      */
-    @ApiModelProperty(name = "本次充值金额")
+    @ApiModelProperty(value = "本次充值金额")
     private LocalDateTime rechargeTime;
 
 }

@@ -22,61 +22,61 @@ public class CustomerInfoResponse implements Serializable {
     /**
      * uuid
      */
-    @ApiModelProperty(name = "uuid")
+    @ApiModelProperty(value = "uuid")
     private String customerId;
 
     /**
      * 公司名称
      */
-    @ApiModelProperty(name = "公司名称")
+    @ApiModelProperty(value = "公司名称")
     private String customerName;
 
     /**
      * 客户帐号
      */
-    @ApiModelProperty(name = "客户帐号")
+    @ApiModelProperty(value = "客户帐号")
     private String customerAccount;
 
     /**
      * 会员登录密码
      */
-    @ApiModelProperty(name = "会员登录密码")
+    @ApiModelProperty(value = "会员登录密码")
     private String customerPassword;
 
     /**
      * ip地址
      */
-    @ApiModelProperty(name = "ip地址")
+    @ApiModelProperty(value = "ip地址")
     private String ip;
 
     /**
      * 客户描述
      */
-    @ApiModelProperty(name = "客户描述")
+    @ApiModelProperty(value = "客户描述")
     private String customerDesc;
 
     /**
      * 充值金额
      */
-    @ApiModelProperty(name = "充值金额")
+    @ApiModelProperty(value = "充值金额")
     private BigDecimal rechargeAmount;
 
     /**
      * 剩余金额
      */
-    @ApiModelProperty(name = "剩余金额")
+    @ApiModelProperty(value = "剩余金额")
     private BigDecimal balanceAmount;
 
     /**
      * 授信额度
      */
-    @ApiModelProperty(name = "授信额度")
+    @ApiModelProperty(value = "授信额度")
     private BigDecimal creditAmount;
 
     /**
      * 创建时间
      */
-    @ApiModelProperty(name = "创建时间")
+    @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
 }

@@ -20,26 +20,26 @@ public class CustomerServiceResponse implements Serializable {
     /**
      * customerId
      */
-    @ApiModelProperty(name = "customer_id")
+    @ApiModelProperty(value = "customer_id")
     private String customerId;
 
 
     /**
      * 服务id
      */
-    @ApiModelProperty(name = "服务id")
+    @ApiModelProperty(value = "服务id")
     private String serviceId;
 
     /**
      * 服务名称
      */
-    @ApiModelProperty(name = "服务名称")
+    @ApiModelProperty(value = "服务名称")
     private String serviceName;
 
     /**
      * 创建时间
      */
-    @ApiModelProperty(name = "创建时间")
+    @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
 }
