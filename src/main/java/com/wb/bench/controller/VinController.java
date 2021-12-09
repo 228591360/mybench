@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -33,5 +34,15 @@ public class VinController {
     public BaseResponse queryVinInfo(@RequestBody @Validated VinRequest vinRequest){
         String s = vinService.queryVinInfo(vinRequest);
         return BaseResponse.success(JSON.parse(s));
+    }
+
+    @PostMapping("/freceivedata")
+    @ApiOperation("")
+    public String freceivedata(String data){
+        if(Objects.isNull(data)){
+            return "fail";
+        }
+        System.out.println("data========"+data);
+        return "success";
     }
 }

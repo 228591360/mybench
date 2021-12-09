@@ -1,12 +1,5 @@
 package com.wb.bench.util;
 
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
@@ -24,6 +17,13 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * httpclientutils
@@ -142,7 +142,7 @@ public class HttpClientUtil {
             httpPost.setHeader("Content-Type","application/json;charset=utf-8");
             if(StringUtils.isNotEmpty(token_header)) {
                // httpPost.setHeader("x-authentication-token", token_header);
-                httpPost.setHeader("x-mvTrackId-token", token_header);
+                httpPost.setHeader("Headers", token_header);
             }
 
             StringEntity entity = new StringEntity(json);
