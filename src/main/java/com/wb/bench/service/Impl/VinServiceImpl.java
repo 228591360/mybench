@@ -97,13 +97,13 @@ public class VinServiceImpl implements VinService {
         if(!"查询成功".equals(jsonObject.get("message").toString())){
             return "fail";
         }
-//        QueryWrapper<WbQueryLog> wbQueryLogQueryWrapper = new QueryWrapper<>();
-//        wbQueryLogQueryWrapper.eq("order_id",jsonObject.get("orderid").toString());
-//        WbQueryLog wbQueryLog = wbQueryLogMapper.selectOne(wbQueryLogQueryWrapper);
-//        String callBackUrl = wbQueryLog.getCallBackUrl();
+        QueryWrapper<WbQueryLog> wbQueryLogQueryWrapper = new QueryWrapper<>();
+        wbQueryLogQueryWrapper.eq("order_id",jsonObject.get("orderid").toString());
+        WbQueryLog wbQueryLog = wbQueryLogMapper.selectOne(wbQueryLogQueryWrapper);
+        String callBackUrl = wbQueryLog.getCallBackUrl();
         Map map = new HashMap<String ,Object>();
         map.put("data",s);
-        String s1 = HttpClientUtil.doPost("http://139.196.19.64:8082/freceivedata", map);
+        String s1 = HttpClientUtil.doPost(callBackUrl, map);
         System.out.println(s1);
         return "success";
     }
