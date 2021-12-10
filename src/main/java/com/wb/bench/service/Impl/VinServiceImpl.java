@@ -1,12 +1,15 @@
 package com.wb.bench.service.Impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wb.bench.entity.CustomerInfo;
 import com.wb.bench.entity.CustomerService;
+import com.wb.bench.entity.WbQueryLog;
 import com.wb.bench.exception.SbcRuntimeException;
 import com.wb.bench.mapper.CustomerInfoMapper;
 import com.wb.bench.mapper.CustomerServiceMapper;
+import com.wb.bench.mapper.WbQueryLogMapper;
 import com.wb.bench.request.VinRequest;
 import com.wb.bench.service.VinService;
 import com.wb.bench.util.HttpClientUtil;
@@ -14,10 +17,8 @@ import com.wb.bench.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class VinServiceImpl implements VinService {
@@ -31,6 +32,9 @@ public class VinServiceImpl implements VinService {
 
     @Autowired
     private CustomerServiceMapper customerServiceMapper;
+
+    @Autowired
+    private WbQueryLogMapper wbQueryLogMapper;
 
     @Override
     public String queryInfo(VinRequest vinRequest) throws Exception {
@@ -61,35 +65,75 @@ public class VinServiceImpl implements VinService {
         if(customerServiceMapper.selectCount(customerServiceQueryWrapper)<0){
             throw new SbcRuntimeException("无权限调用服务");
         }
-        return null;
-    }
-
-    public static void main(String[] args) throws Exception {
-//        String mvTrackId ="20170926105632_VehicleInsuranceInfo_zhongpuweixin_sa23jhfu";
-//        Map map = new HashMap<String ,Object>();
-//        map.put("loginName","zhongpuweixin");
-//        map.put("pwd","zhongpuweixin1205");
-//        map.put("serviceName","VehicleInsuranceInfo");
-//        Map map1 = new HashMap<String ,String>();
-//        map1.put("vin","LHGCR1657E8041428");
-//        map.put("param",map1);
-//        String jsonString = JSON.toJSONString(map);
-//        System.out.println(jsonString);
-//        String s = HttpClientUtil.doPostJson("https://www.miniscores.net:8313/CreditFunc/v2.1/VehicleInsuranceInfo", jsonString,mvTrackId);
-//        System.out.println(s);
-
-
         LinkedHashMap map = new LinkedHashMap();
-        map.put("callbackUrl","http://139.196.19.64:8082/freceivedata");
+        map.put("callbackUrl",callbackUrl);
         map.put("timeStamp",String.valueOf(System.currentTimeMillis()));
-        map.put("userId","skHl8OwQONOovA6X");
-        map.put("userToken","VqFel0WgTEMoPX0LWsP5i86FGq9BKD5j");
-        map.put("vin","LVSHFFAC8EF840063");
+        map.put("userId",userId);
+        map.put("userToken",userToken);
+        map.put("vin",vinRequest.getVin());
         String string = map.toString().replace(", ", "&");
-        String endString = string.substring(1, string.length() - 1) + "jkdbx3wdkpAeNKE5Ci7Nvr4j4Q3UAJdn";
+        String endString = string.substring(1, string.length() - 1) + apiKey;
         String appSign = (MD5Util.md5Hex(endString, "utf-8"));
         map.put("appSign",appSign);
         String s = HttpClientUtil.doPost("http://cc2.thinkingleap.com/car-data/api/query/wb", map);
+        JSONObject jsonObject = JSONObject.parseObject(s);
+        if("查询成功".equals(jsonObject.get("message"))&&"0".equals(jsonObject.get("code"))){
+            WbQueryLog wbQueryLog = new WbQueryLog();
+            wbQueryLog.setOrderId(jsonObject.get("orderid").toString());
+            wbQueryLog.setCallBackUrl(vinRequest.getCallbackUrl());
+            wbQueryLog.setCustomerId(customerInfo.getCustomerId());
+            wbQueryLog.setCreateTime(LocalDateTime.now());
+            wbQueryLogMapper.insert(wbQueryLog);
+        }
+        return s;
+    }
+
+    @Override
+    public String freceivedata(String data) {
+        byte[] result = Base64.getDecoder().decode(data.getBytes());
+        String s = new String(result);
         System.out.println(s);
+        JSONObject jsonObject = JSONObject.parseObject(s);
+        if(!"查询成功".equals(jsonObject.get("message").toString())){
+            return "fail";
+        }
+//        QueryWrapper<WbQueryLog> wbQueryLogQueryWrapper = new QueryWrapper<>();
+//        wbQueryLogQueryWrapper.eq("order_id",jsonObject.get("orderid").toString());
+//        WbQueryLog wbQueryLog = wbQueryLogMapper.selectOne(wbQueryLogQueryWrapper);
+//        String callBackUrl = wbQueryLog.getCallBackUrl();
+        Map map = new HashMap<String ,Object>();
+        map.put("data",s);
+        String s1 = HttpClientUtil.doPost("http://139.196.19.64:8082/freceivedata", map);
+        System.out.println(s1);
+        return "success";
+    }
+
+    public static void main(String[] args) throws Exception {
+        String mvTrackId ="20170926105632_VehicleInsuranceInfo_zhongpuweixin_sa23jhfu";
+        Map map = new HashMap<String ,Object>();
+        map.put("loginName","zhongpuweixin");
+        map.put("pwd","zhongpuweixin1205");
+        map.put("serviceName","VehicleInsuranceInfo");
+        Map map1 = new HashMap<String ,String>();
+        map1.put("vin","LVSHFFAC8EF840063");
+        map.put("param",map1);
+        String jsonString = JSON.toJSONString(map);
+        System.out.println(jsonString);
+        String s = HttpClientUtil.doPostJson("https://www.miniscores.net:8313/CreditFunc/v2.1/VehicleInsuranceInfo", jsonString,mvTrackId);
+        System.out.println(s);
+
+
+//        LinkedHashMap map = new LinkedHashMap();
+//        map.put("callbackUrl","http://139.196.19.64:8082/freceivedata");
+//        map.put("timeStamp",String.valueOf(System.currentTimeMillis()));
+//        map.put("userId","skHl8OwQONOovA6X");
+//        map.put("userToken","VqFel0WgTEMoPX0LWsP5i86FGq9BKD5j");
+//        map.put("vin","LVSHFFAC8EF840063");
+//        String string = map.toString().replace(", ", "&");
+//        String endString = string.substring(1, string.length() - 1) + "jkdbx3wdkpAeNKE5Ci7Nvr4j4Q3UAJdn";
+//        String appSign = (MD5Util.md5Hex(endString, "utf-8"));
+//        map.put("appSign",appSign);
+//        String s = HttpClientUtil.doPost("http://cc2.thinkingleap.com/car-data/api/query/wb", map);
+//        System.out.println(s);
     }
 }

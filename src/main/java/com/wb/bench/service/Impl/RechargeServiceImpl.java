@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-public class RechargeServiceImpl implements RechargeService {
+public class RechargeServiceImpl  implements RechargeService {
     @Autowired
     private CustomerInfoMapper customerInfoMapper;
 

@@ -31,6 +31,13 @@ public class VinRequest implements Serializable {
     private String vin;
 
     /**
+     * 回调地址
+     */
+    @ApiModelProperty(value = "回调地址")
+    @NotBlank(message = "回调地址")
+    private String callbackUrl;
+
+    /**
      * 服务号
      */
     @ApiModelProperty(value = "车架号")

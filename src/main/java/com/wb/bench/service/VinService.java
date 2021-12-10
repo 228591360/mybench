@@ -6,4 +6,6 @@ public interface VinService {
     String queryInfo(VinRequest vinRequest) throws Exception;
 
     String queryVinInfo(VinRequest vinRequest);
+
+    String freceivedata(String data);
 }

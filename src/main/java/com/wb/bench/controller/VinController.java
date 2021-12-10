@@ -42,7 +42,6 @@ public class VinController {
         if(Objects.isNull(data)){
             return "fail";
         }
-        System.out.println("data========"+data);
-        return "success";
+        return vinService.freceivedata(data);
     }
 }
