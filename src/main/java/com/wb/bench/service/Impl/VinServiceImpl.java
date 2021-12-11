@@ -92,19 +92,19 @@ public class VinServiceImpl implements VinService {
     public String freceivedata(String data) {
         byte[] result = Base64.getDecoder().decode(data.getBytes());
         String s = new String(result);
-        System.out.println(s);
         JSONObject jsonObject = JSONObject.parseObject(s);
         if(!"查询成功".equals(jsonObject.get("message").toString())){
             return "fail";
         }
+        String replace = s.replace("wbcl", "material").replace("wblc", "mileage")
+                .replace("wbrq", "date").replace("wbxm", "project").replace("wbzl", "category");
         QueryWrapper<WbQueryLog> wbQueryLogQueryWrapper = new QueryWrapper<>();
         wbQueryLogQueryWrapper.eq("order_id",jsonObject.get("orderid").toString());
         WbQueryLog wbQueryLog = wbQueryLogMapper.selectOne(wbQueryLogQueryWrapper);
         String callBackUrl = wbQueryLog.getCallBackUrl();
         Map map = new HashMap<String ,Object>();
-        map.put("data",s);
-        String s1 = HttpClientUtil.doPost(callBackUrl, map);
-        System.out.println(s1);
+        map.put("data",replace);
+        HttpClientUtil.doPost(callBackUrl, map);
         return "success";
     }
 
