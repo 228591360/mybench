@@ -40,6 +40,7 @@ public class CustomerInfoServerImpl extends ServiceImpl<CustomerInfoMapper, Cust
     public BasePage<CustomerInfoResponse> queryPageList(CustomerInfoRequest customerInfoRequest) {
         BasePage<CustomerInfoResponse> basePage = new BasePage<>();
         basePage.setCurrent(customerInfoRequest.getPage());
+        basePage.setSize(customerInfoRequest.getLimit());
         PageHelper.startPage(customerInfoRequest.getPage(), customerInfoRequest.getLimit());
         List<CustomerInfoResponse> customerInfos = customerInfoMapper.queryCustomerInfo();
         if (CollectionUtil.isNotEmpty(customerInfos)) {
