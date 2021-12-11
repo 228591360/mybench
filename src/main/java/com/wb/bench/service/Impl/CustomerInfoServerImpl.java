@@ -42,7 +42,7 @@ public class CustomerInfoServerImpl extends ServiceImpl<CustomerInfoMapper, Cust
         basePage.setCurrent(customerInfoRequest.getPage());
         basePage.setSize(customerInfoRequest.getLimit());
         PageHelper.startPage(customerInfoRequest.getPage(), customerInfoRequest.getLimit());
-        List<CustomerInfoResponse> customerInfos = customerInfoMapper.queryCustomerInfo();
+        List<CustomerInfoResponse> customerInfos = customerInfoMapper.queryCustomerInfo(customerInfoRequest);
         if (CollectionUtil.isNotEmpty(customerInfos)) {
             PageInfo<CustomerInfoResponse> pageInfo = new PageInfo<>(customerInfos);
             //统计总条数
@@ -53,8 +53,8 @@ public class CustomerInfoServerImpl extends ServiceImpl<CustomerInfoMapper, Cust
     }
 
     @Override
-    public List<CustomerInfoResponse> queryCustomerInfo() {
-        List<CustomerInfoResponse> customerInfos = customerInfoMapper.queryCustomerInfo();
+    public List<CustomerInfoResponse> queryCustomerInfo(CustomerInfoRequest customerInfoRequest) {
+        List<CustomerInfoResponse> customerInfos = customerInfoMapper.queryCustomerInfo(customerInfoRequest);
         return customerInfos;
     }
 

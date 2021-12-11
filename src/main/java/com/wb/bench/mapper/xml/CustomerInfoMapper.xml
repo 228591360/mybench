@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wb.bench.mapper.CustomerInfoMapper">
+
     <select id="queryCustomerInfo" resultType="com.wb.bench.response.CustomerInfoResponse">
         select  * from customer_info
+        <where>
+            <if test="customerName!=null and customerName!=''">and customer_name like '%${customerName}%'</if>
+            <if test="customerAccount!=null and customerAccount!=''">and customer_account =#{customerAccount}</if>
+        </where>
+        ORDER BY
+        create_time DESC
     </select>
 </mapper>

@@ -49,7 +49,7 @@ public class CustomerInfoController {
     @PostMapping("/queryCustomerInfo")
     @ApiOperation("客户列表")
     public Result<List<CustomerInfoResponse>> queryCustomerInfo(@RequestBody @Validated CustomerInfoRequest customerInfoRequest) {
-        return R.ok(customerInfoServer.queryCustomerInfo());
+        return R.ok(customerInfoServer.queryCustomerInfo(customerInfoRequest));
     }
 
     /**

@@ -13,7 +13,7 @@ import java.util.List;
 public interface CustomerInfoServer {
     BasePage<CustomerInfoResponse> queryPageList(CustomerInfoRequest customerInfoRequest);
 
-    List<CustomerInfoResponse> queryCustomerInfo();
+    List<CustomerInfoResponse> queryCustomerInfo(CustomerInfoRequest customerInfoRequest);
 
     CustomerInfoResponse queryCustomerInfoById(String customerId);
 

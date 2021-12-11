@@ -30,7 +30,7 @@ public class CustomerInfoRequest extends PageEntity implements Serializable {
     /**
      * 公司名称
      */
-    @ApiModelProperty(value = "客户帐号")
+    @ApiModelProperty(value = "客户名称")
     private String customerName;
 
     /**
