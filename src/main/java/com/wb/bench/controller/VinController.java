@@ -44,4 +44,14 @@ public class VinController {
         }
         return vinService.freceivedata(data);
     }
+
+    @PostMapping("/backdata")
+    @ApiOperation("")
+    public String backdata(String data){
+        if(Objects.isNull(data)){
+            return "fail";
+        }
+        System.out.println(data);
+        return "success";
+    }
 }

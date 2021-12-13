@@ -50,4 +50,28 @@ public class VinRequest implements Serializable {
     @ApiModelProperty(value = "服务名称")
     private String serviceName;
 
+    /**
+     * 发动机号
+     */
+    @ApiModelProperty(value = "发动机号")
+    private String engine;
+
+    /**
+     * 车牌号
+     */
+    @ApiModelProperty(value = "车牌号")
+    private String carNumber;
+
+    /**
+     * 行驶证照片
+     */
+    @ApiModelProperty(value = "行驶证照片")
+    private String imageUrl;
+
+    /**
+     * 车辆登记证照片
+     */
+    @ApiModelProperty(value = "车辆登记证照片")
+    private String djzUrl;
+
 }

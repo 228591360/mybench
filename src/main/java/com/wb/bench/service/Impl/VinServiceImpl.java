@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wb.bench.entity.CustomerInfo;
-import com.wb.bench.entity.CustomerService;
 import com.wb.bench.entity.WbQueryLog;
 import com.wb.bench.exception.SbcRuntimeException;
 import com.wb.bench.mapper.CustomerInfoMapper;
@@ -57,16 +56,22 @@ public class VinServiceImpl implements VinService {
         customerInfoQueryWrapper.eq("customer_password",vinRequest.getCustomerPassword());
         CustomerInfo customerInfo = customerInfoMapper.selectOne(customerInfoQueryWrapper);
         if(Objects.isNull(customerInfo)){
-            throw new SbcRuntimeException("客户未注册");
+            throw new SbcRuntimeException(1004,"用户无权限");
         }
-        QueryWrapper<CustomerService> customerServiceQueryWrapper = new QueryWrapper<>();
-        customerServiceQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
-        customerServiceQueryWrapper.eq("service_id",vinRequest.getServiceId());
-        if(customerServiceMapper.selectCount(customerServiceQueryWrapper)<0){
-            throw new SbcRuntimeException("无权限调用服务");
-        }
+//        QueryWrapper<CustomerService> customerServiceQueryWrapper = new QueryWrapper<>();
+//        customerServiceQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
+//        customerServiceQueryWrapper.eq("service_id",vinRequest.getServiceId());
+//        if(customerServiceMapper.selectCount(customerServiceQueryWrapper)<0){
+//            throw new SbcRuntimeException("无权限调用服务");
+//        }
         LinkedHashMap map = new LinkedHashMap();
         map.put("callbackUrl",callbackUrl);
+        if(Objects.nonNull(vinRequest.getCarNumber())){
+            map.put("carNumber",vinRequest.getCarNumber());
+        }
+        if(Objects.nonNull(vinRequest.getEngine())){
+            map.put("engine",vinRequest.getEngine());
+        }
         map.put("timeStamp",String.valueOf(System.currentTimeMillis()));
         map.put("userId",userId);
         map.put("userToken",userToken);
@@ -74,6 +79,8 @@ public class VinServiceImpl implements VinService {
         String string = map.toString().replace(", ", "&");
         String endString = string.substring(1, string.length() - 1) + apiKey;
         String appSign = (MD5Util.md5Hex(endString, "utf-8"));
+        map.put("imageUrl",vinRequest.getImageUrl());
+        map.put("djzUrl",vinRequest.getDjzUrl());
         map.put("appSign",appSign);
         String s = HttpClientUtil.doPost("http://cc2.thinkingleap.com/car-data/api/query/wb", map);
         JSONObject jsonObject = JSONObject.parseObject(s);
@@ -109,31 +116,38 @@ public class VinServiceImpl implements VinService {
     }
 
     public static void main(String[] args) throws Exception {
-        String mvTrackId ="20170926105632_VehicleInsuranceInfo_zhongpuweixin_sa23jhfu";
-        Map map = new HashMap<String ,Object>();
-        map.put("loginName","zhongpuweixin");
-        map.put("pwd","zhongpuweixin1205");
-        map.put("serviceName","VehicleInsuranceInfo");
-        Map map1 = new HashMap<String ,String>();
-        map1.put("vin","LVSHFFAC8EF840063");
-        map.put("param",map1);
-        String jsonString = JSON.toJSONString(map);
-        System.out.println(jsonString);
-        String s = HttpClientUtil.doPostJson("https://www.miniscores.net:8313/CreditFunc/v2.1/VehicleInsuranceInfo", jsonString,mvTrackId);
-        System.out.println(s);
-
-
-//        LinkedHashMap map = new LinkedHashMap();
-//        map.put("callbackUrl","http://139.196.19.64:8082/freceivedata");
-//        map.put("timeStamp",String.valueOf(System.currentTimeMillis()));
-//        map.put("userId","skHl8OwQONOovA6X");
-//        map.put("userToken","VqFel0WgTEMoPX0LWsP5i86FGq9BKD5j");
-//        map.put("vin","LVSHFFAC8EF840063");
-//        String string = map.toString().replace(", ", "&");
-//        String endString = string.substring(1, string.length() - 1) + "jkdbx3wdkpAeNKE5Ci7Nvr4j4Q3UAJdn";
-//        String appSign = (MD5Util.md5Hex(endString, "utf-8"));
-//        map.put("appSign",appSign);
-//        String s = HttpClientUtil.doPost("http://cc2.thinkingleap.com/car-data/api/query/wb", map);
+//        String mvTrackId ="20170926105632_VehicleInsuranceInfo_zhongpuweixin_sa23jhfu";
+//        Map map = new HashMap<String ,Object>();
+//        map.put("loginName","zhongpuweixin");
+//        map.put("pwd","zhongpuweixin1205");
+//        map.put("serviceName","VehicleInsuranceInfo");
+//        Map map1 = new HashMap<String ,String>();
+//        map1.put("vin","LVSHFFAC8EF840063");
+//        map.put("param",map1);
+//        String jsonString = JSON.toJSONString(map);
+//        System.out.println(jsonString);
+//        String s = HttpClientUtil.doPostJson("https://www.miniscores.net:8313/CreditFunc/v2.1/VehicleInsuranceInfo", jsonString,mvTrackId);
 //        System.out.println(s);
+
+
+        LinkedHashMap map = new LinkedHashMap();
+        map.put("callbackUrl","http://139.196.19.64:8082/freceivedata");
+        map.put("carNumber","null");
+        map.put("engine","null");
+        map.put("timeStamp",String.valueOf(System.currentTimeMillis()));
+        map.put("userId","skHl8OwQONOovA6X");
+        map.put("userToken","VqFel0WgTEMoPX0LWsP5i86FGq9BKD5j");
+        map.put("vin","LVSHFFAC8EF840063");
+        String string = map.toString().replace(", ", "&");
+        System.out.println(string);
+        String endString = string.substring(1, string.length() - 1) + "jkdbx3wdkpAeNKE5Ci7Nvr4j4Q3UAJdn";
+        System.out.println(endString);
+        String appSign = (MD5Util.md5Hex(endString, "utf-8"));
+        System.out.println(appSign);
+        map.put("imageUrl",null);
+        map.put("djzUrl",null);
+        map.put("appSign",appSign);
+        String s = HttpClientUtil.doPost("http://cc2.thinkingleap.com/car-data/api/query/wb", map);
+        System.out.println(s);
     }
 }
