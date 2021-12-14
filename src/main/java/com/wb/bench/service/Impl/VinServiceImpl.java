@@ -100,15 +100,22 @@ public class VinServiceImpl implements VinService {
         byte[] result = Base64.getDecoder().decode(data.getBytes());
         String s = new String(result);
         JSONObject jsonObject = JSONObject.parseObject(s);
+        QueryWrapper<WbQueryLog> wbQueryLogQueryWrapper = new QueryWrapper<>();
+        wbQueryLogQueryWrapper.eq("order_id",jsonObject.get("orderid").toString());
+        WbQueryLog wbQueryLog = wbQueryLogMapper.selectOne(wbQueryLogQueryWrapper);
+        String callBackUrl = wbQueryLog.getCallBackUrl();
+        if("1001".equals(jsonObject.get("code").toString())){
+            Map map = new HashMap<String ,Object>();
+            map.put("data",s);
+            HttpClientUtil.doPost(callBackUrl, map);
+            return "success";
+        }
         if(!"查询成功".equals(jsonObject.get("message").toString())){
             return "fail";
         }
         String replace = s.replace("wbcl", "material").replace("wblc", "mileage")
                 .replace("wbrq", "date").replace("wbxm", "project").replace("wbzl", "category");
-        QueryWrapper<WbQueryLog> wbQueryLogQueryWrapper = new QueryWrapper<>();
-        wbQueryLogQueryWrapper.eq("order_id",jsonObject.get("orderid").toString());
-        WbQueryLog wbQueryLog = wbQueryLogMapper.selectOne(wbQueryLogQueryWrapper);
-        String callBackUrl = wbQueryLog.getCallBackUrl();
+        System.out.println(replace);
         Map map = new HashMap<String ,Object>();
         map.put("data",replace);
         HttpClientUtil.doPost(callBackUrl, map);
