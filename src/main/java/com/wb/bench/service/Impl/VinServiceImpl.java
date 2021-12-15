@@ -122,6 +122,27 @@ public class VinServiceImpl implements VinService {
         return "success";
     }
 
+    @Override
+    public String outDange(VinRequest vinRequest) {
+        LinkedHashMap map = new LinkedHashMap<String ,Object>();
+        map.put("customerId","e4775b980f5fa7f5f45d291742870cd4");
+        Map map1 = new HashMap<String ,String>();
+        map1.put("vin",vinRequest.getVin());
+        map.put("encrypt",JSON.toJSONString(map1));
+        map.put("encryptType","false");
+        map.put("productCode","BA610011");
+        map.put("reqTime",String.valueOf(System.currentTimeMillis()));
+        map.put("version","V001");
+        String string = map.toString().replace(" ","");
+        String endString = string.substring(1, string.length() - 1);
+        String sign = (MD5Util.md5Hex(endString, "utf-8"));
+        map.put("sign",sign);
+        System.out.println(map);
+        String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
+        System.out.println(JSON.parse(end));
+        return end;
+    }
+
     public static void main(String[] args) throws Exception {
 //        String mvTrackId ="20170926105632_VehicleInsuranceInfo_zhongpuweixin_sa23jhfu";
 //        Map map = new HashMap<String ,Object>();
@@ -137,24 +158,43 @@ public class VinServiceImpl implements VinService {
 //        System.out.println(s);
 
 
-        LinkedHashMap map = new LinkedHashMap();
-        map.put("callbackUrl","http://139.196.19.64:8082/freceivedata");
-        map.put("carNumber","null");
-        map.put("engine","null");
-        map.put("timeStamp",String.valueOf(System.currentTimeMillis()));
-        map.put("userId","skHl8OwQONOovA6X");
-        map.put("userToken","VqFel0WgTEMoPX0LWsP5i86FGq9BKD5j");
-        map.put("vin","LVSHFFAC8EF840063");
-        String string = map.toString().replace(", ", "&");
-        System.out.println(string);
-        String endString = string.substring(1, string.length() - 1) + "jkdbx3wdkpAeNKE5Ci7Nvr4j4Q3UAJdn";
+//        LinkedHashMap map = new LinkedHashMap();
+//        map.put("callbackUrl","http://139.196.19.64:8082/freceivedata");
+//        map.put("carNumber","null");
+//        map.put("engine","null");
+//        map.put("timeStamp",String.valueOf(System.currentTimeMillis()));
+//        map.put("userId","skHl8OwQONOovA6X");
+//        map.put("userToken","VqFel0WgTEMoPX0LWsP5i86FGq9BKD5j");
+//        map.put("vin","LVSHFFAC8EF840063");
+//        String string = map.toString().replace(", ", "&");
+//        System.out.println(string);
+//        String endString = string.substring(1, string.length() - 1) + "jkdbx3wdkpAeNKE5Ci7Nvr4j4Q3UAJdn";
+//        System.out.println(endString);
+//        String appSign = (MD5Util.md5Hex(endString, "utf-8"));
+//        System.out.println(appSign);
+//        map.put("imageUrl",null);
+//        map.put("djzUrl",null);
+//        map.put("appSign",appSign);
+//        String s = HttpClientUtil.doPost("http://cc2.thinkingleap.com/car-data/api/query/wb", map);
+//        System.out.println(s);
+
+        LinkedHashMap map = new LinkedHashMap<String ,Object>();
+        map.put("customerId","e4775b980f5fa7f5f45d291742870cd4");
+        Map map1 = new HashMap<String ,String>();
+        map1.put("vin","LVSHFFAC8EF840063");
+        map.put("encrypt",JSON.toJSONString(map1));
+        map.put("encryptType","false");
+        map.put("productCode","BA610011");
+        map.put("reqTime",String.valueOf(System.currentTimeMillis()));
+        map.put("version","V001");
+        String string = map.toString().replace(" ","");
+        String endString = string.substring(1, string.length() - 1);
         System.out.println(endString);
-        String appSign = (MD5Util.md5Hex(endString, "utf-8"));
-        System.out.println(appSign);
-        map.put("imageUrl",null);
-        map.put("djzUrl",null);
-        map.put("appSign",appSign);
-        String s = HttpClientUtil.doPost("http://cc2.thinkingleap.com/car-data/api/query/wb", map);
-        System.out.println(s);
+        String sign = (MD5Util.md5Hex(endString, "utf-8"));
+        System.out.println(sign);
+        map.put("sign",sign);
+        System.out.println(map);
+        String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
+        System.out.println(JSON.parse(end));
     }
 }

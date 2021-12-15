@@ -8,4 +8,6 @@ public interface VinService {
     String queryVinInfo(VinRequest vinRequest);
 
     String freceivedata(String data);
+
+    String outDange(VinRequest vinRequest);
 }

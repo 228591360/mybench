@@ -29,15 +29,25 @@ public class VinController {
         return BaseResponse.success(JSON.parse(s));
     }
 
+    /**
+     * 维保查询
+     * @param vinRequest
+     * @return
+     */
     @PostMapping("/v1/queryInfo")
-    @ApiOperation("")
+    @ApiOperation("维保查询")
     public BaseResponse queryVinInfo(@RequestBody @Validated VinRequest vinRequest){
         String s = vinService.queryVinInfo(vinRequest);
         return BaseResponse.success(JSON.parse(s));
     }
 
+    /**
+     * 维保回调
+     * @param data
+     * @return
+     */
     @PostMapping("/freceivedata")
-    @ApiOperation("")
+    @ApiOperation("维保回调")
     public String freceivedata(String data){
         if(Objects.isNull(data)){
             return "fail";
@@ -53,5 +63,15 @@ public class VinController {
         }
         System.out.println(data);
         return "success";
+    }
+
+    /**
+     * 出险查询
+     */
+    @PostMapping("/outDange")
+    @ApiOperation("出险查询")
+    public BaseResponse outDange(@RequestBody @Validated VinRequest vinRequest){
+        String s = vinService.outDange(vinRequest);
+        return BaseResponse.success(JSON.parse(s));
     }
 }
