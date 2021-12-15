@@ -124,6 +124,13 @@ public class VinServiceImpl implements VinService {
 
     @Override
     public String outDange(VinRequest vinRequest) {
+        QueryWrapper<CustomerInfo> customerInfoQueryWrapper = new QueryWrapper<>();
+        customerInfoQueryWrapper.eq("customer_account",vinRequest.getCustomerAccount());
+        customerInfoQueryWrapper.eq("customer_password",vinRequest.getCustomerPassword());
+        CustomerInfo customerInfo = customerInfoMapper.selectOne(customerInfoQueryWrapper);
+        if(Objects.isNull(customerInfo)){
+            throw new SbcRuntimeException(1004,"用户无权限");
+        }
         LinkedHashMap map = new LinkedHashMap<String ,Object>();
         map.put("customerId","e4775b980f5fa7f5f45d291742870cd4");
         Map map1 = new HashMap<String ,String>();
