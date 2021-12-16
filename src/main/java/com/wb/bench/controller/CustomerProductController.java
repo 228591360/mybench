@@ -41,17 +41,17 @@ public class CustomerProductController {
     }
 
 
-    /**
-     * 删除
-     * @param customerProductRequest
-     * @return
-     */
-    @PostMapping("/deleteByCustomerIdAndProductId")
-    @ApiOperation("删除")
-    public Result deleteByCustomerIdAndProductId(@RequestBody @Validated CustomerProductRequest customerProductRequest) {
-        customerProductService.deleteByCustomerIdAndProductId(customerProductRequest);
-        return R.ok();
-    }
+//    /**
+//     * 删除
+//     * @param customerProductRequest
+//     * @return
+//     */
+//    @PostMapping("/deleteByCustomerIdAndProductId")
+//    @ApiOperation("删除")
+//    public Result deleteByCustomerIdAndProductId(@RequestBody @Validated CustomerProductRequest customerProductRequest) {
+//        customerProductService.deleteByCustomerIdAndProductId(customerProductRequest);
+//        return R.ok();
+//    }
 
     /**
      * 编辑

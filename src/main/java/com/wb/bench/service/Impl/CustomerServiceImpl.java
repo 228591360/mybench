@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 @Service
 public class CustomerServiceImpl extends ServiceImpl<CustomerServiceMapper, CustomerProduct> implements CustomerProductService {
@@ -37,8 +38,21 @@ public class CustomerServiceImpl extends ServiceImpl<CustomerServiceMapper, Cust
 
     @Override
     public boolean editCustomerProduct(CustomerProductRequest customerProductRequest) {
-        CustomerProduct customerService = KsBeanUtil.convert(customerProductRequest, CustomerProduct.class);
-        customerService.setCreateTime(LocalDateTime.now());
-        return this.saveOrUpdate(customerService);
+        List<String> productIdList = customerProductRequest.getProductIdList();
+        //先删除所有
+        customerServiceMapper.deleteByCustomerId(customerProductRequest);
+        if(!CollectionUtils.isEmpty(productIdList)){
+            ArrayList<CustomerProduct> customerProducts = new ArrayList<>();
+            for (String productId : productIdList) {
+                CustomerProduct customerProduct =new CustomerProduct();
+                customerProduct.setCustomerId(customerProductRequest.getCustomerId());
+                customerProduct.setProductId(productId);
+                customerProduct.setCreateTime(LocalDateTime.now());
+                customerProducts.add(customerProduct);
+            }
+            this.saveBatch(customerProducts);
+        }
+
+        return true;
     }
 }

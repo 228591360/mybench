@@ -5,4 +5,7 @@
     <delete id="deleteByCustomerIdAndProductId">
         delete from customer_product where customer_id = #{customerId} and product_id =#{serviceId}
     </delete>
+    <delete id="deleteByCustomerId">
+        delete from customer_product where customer_id = #{customerId}
+    </delete>
 </mapper>

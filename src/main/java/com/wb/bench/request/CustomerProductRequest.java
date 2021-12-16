@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @ApiModel
@@ -22,10 +23,10 @@ public class CustomerProductRequest implements Serializable {
 
 
     /**
-     * 产品id
+     * 产品ids
      */
-    @ApiModelProperty(value = "产品id")
-    private String productId;
+    @ApiModelProperty(value = "产品ids")
+    private List<String> productIdList;
 
     /**
      * 产品名称
