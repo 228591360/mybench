@@ -12,31 +12,31 @@ import java.io.Serializable;
 @ApiModel
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerServiceRequest implements Serializable {
+public class CustomerProductRequest implements Serializable {
 
     /**
      * customerId
      */
-    @ApiModelProperty(value = "customer_id")
+    @ApiModelProperty(value = "customerId")
     private String customerId;
 
 
     /**
-     * 服务id
+     * 产品id
      */
-    @ApiModelProperty(value = "服务id")
-    private String serviceId;
+    @ApiModelProperty(value = "产品id")
+    private String productId;
 
     /**
-     * 服务名称
+     * 产品名称
      */
-    @ApiModelProperty(value = "服务名称")
-    private String serviceName;
+    @ApiModelProperty(value = "产品名称")
+    private String productName;
 
     /**
-     * 服务定价
+     * 产品定价
      */
-    @ApiModelProperty(value = "服务定价")
-    private String servicePrice;
+    @ApiModelProperty(value = "产品定价")
+    private String productPrice;
 
 }

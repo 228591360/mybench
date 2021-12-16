@@ -9,6 +9,7 @@ import com.wb.bench.exception.SbcRuntimeException;
 import com.wb.bench.mapper.CustomerInfoMapper;
 import com.wb.bench.mapper.CustomerServiceMapper;
 import com.wb.bench.mapper.WbQueryLogMapper;
+import com.wb.bench.request.OutVinRequest;
 import com.wb.bench.request.VinRequest;
 import com.wb.bench.service.VinService;
 import com.wb.bench.util.HttpClientUtil;
@@ -56,14 +57,15 @@ public class VinServiceImpl implements VinService {
         customerInfoQueryWrapper.eq("customer_password",vinRequest.getCustomerPassword());
         CustomerInfo customerInfo = customerInfoMapper.selectOne(customerInfoQueryWrapper);
         if(Objects.isNull(customerInfo)){
+            throw new SbcRuntimeException(1004,"用户未注册");
+        }
+        if(Objects.isNull(customerInfo.getProductList())){
             throw new SbcRuntimeException(1004,"用户无权限");
         }
-//        QueryWrapper<CustomerService> customerServiceQueryWrapper = new QueryWrapper<>();
-//        customerServiceQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
-//        customerServiceQueryWrapper.eq("service_id",vinRequest.getServiceId());
-//        if(customerServiceMapper.selectCount(customerServiceQueryWrapper)<0){
-//            throw new SbcRuntimeException("无权限调用服务");
-//        }
+        List<String> list =Arrays.asList(customerInfo.getProductList().split(","));
+        if(!list.contains("8000017dbeebc5da435431bf078176c7")){
+            throw new SbcRuntimeException(1004,"用户无权限");
+        }
         LinkedHashMap map = new LinkedHashMap();
         map.put("callbackUrl",callbackUrl);
         if(Objects.nonNull(vinRequest.getCarNumber())){
@@ -123,18 +125,25 @@ public class VinServiceImpl implements VinService {
     }
 
     @Override
-    public String outDange(VinRequest vinRequest) {
+    public String outDange(OutVinRequest outVinRequest) {
         QueryWrapper<CustomerInfo> customerInfoQueryWrapper = new QueryWrapper<>();
-        customerInfoQueryWrapper.eq("customer_account",vinRequest.getCustomerAccount());
-        customerInfoQueryWrapper.eq("customer_password",vinRequest.getCustomerPassword());
+        customerInfoQueryWrapper.eq("customer_account",outVinRequest.getCustomerAccount());
+        customerInfoQueryWrapper.eq("customer_password",outVinRequest.getCustomerPassword());
         CustomerInfo customerInfo = customerInfoMapper.selectOne(customerInfoQueryWrapper);
         if(Objects.isNull(customerInfo)){
+            throw new SbcRuntimeException(1004,"用户未注册");
+        }
+        if(Objects.isNull(customerInfo.getProductList())){
+            throw new SbcRuntimeException(1004,"用户无权限");
+        }
+        List<String> list =Arrays.asList(customerInfo.getProductList().split(","));
+        if(!list.contains("8000017dbeebf35460805819fef4288d")){
             throw new SbcRuntimeException(1004,"用户无权限");
         }
         LinkedHashMap map = new LinkedHashMap<String ,Object>();
         map.put("customerId","e4775b980f5fa7f5f45d291742870cd4");
         Map map1 = new HashMap<String ,String>();
-        map1.put("vin",vinRequest.getVin());
+        map1.put("vin",outVinRequest.getVin());
         map.put("encrypt",JSON.toJSONString(map1));
         map.put("encryptType","false");
         map.put("productCode","BA610011");
@@ -144,9 +153,8 @@ public class VinServiceImpl implements VinService {
         String endString = string.substring(1, string.length() - 1);
         String sign = (MD5Util.md5Hex(endString, "utf-8"));
         map.put("sign",sign);
-        System.out.println(map);
         String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
-        System.out.println(JSON.parse(end));
+        System.out.println(end);
         return end;
     }
 

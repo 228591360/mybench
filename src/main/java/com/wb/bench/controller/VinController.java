@@ -2,6 +2,7 @@ package com.wb.bench.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.wb.bench.base.BaseResponse;
+import com.wb.bench.request.OutVinRequest;
 import com.wb.bench.request.VinRequest;
 import com.wb.bench.service.VinService;
 import io.swagger.annotations.Api;
@@ -36,9 +37,9 @@ public class VinController {
      */
     @PostMapping("/v1/queryInfo")
     @ApiOperation("维保查询")
-    public BaseResponse queryVinInfo(@RequestBody @Validated VinRequest vinRequest){
+    public String queryVinInfo(@RequestBody @Validated VinRequest vinRequest){
         String s = vinService.queryVinInfo(vinRequest);
-        return BaseResponse.success(JSON.parse(s));
+        return JSON.parse(s).toString();
     }
 
     /**
@@ -70,8 +71,7 @@ public class VinController {
      */
     @PostMapping("/outDange")
     @ApiOperation("出险查询")
-    public BaseResponse outDange(@RequestBody @Validated VinRequest vinRequest){
-        String s = vinService.outDange(vinRequest);
-        return BaseResponse.success(JSON.parse(s));
+    public String outDange(@RequestBody @Validated OutVinRequest outVinRequest){
+        return vinService.outDange(outVinRequest);
     }
 }

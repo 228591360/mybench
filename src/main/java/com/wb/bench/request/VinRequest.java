@@ -40,14 +40,10 @@ public class VinRequest implements Serializable {
     /**
      * 服务号
      */
-    @ApiModelProperty(value = "车架号")
-    private String serviceId;
+    @ApiModelProperty(value = "服务号")
+    @NotBlank(message = "服务号不能为空")
+    private String productId;
 
-    /**
-     * 服务名称
-     */
-    @ApiModelProperty(value = "服务名称")
-    private String serviceName;
 
     /**
      * 发动机号

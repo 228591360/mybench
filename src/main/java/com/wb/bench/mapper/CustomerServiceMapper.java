@@ -1,8 +1,8 @@
 package com.wb.bench.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.wb.bench.entity.CustomerService;
-import com.wb.bench.request.CustomerServiceRequest;
+import com.wb.bench.entity.CustomerProduct;
+import com.wb.bench.request.CustomerProductRequest;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -10,6 +10,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @Date: 2020/12/8 11:02
  */
 @Mapper
-public interface CustomerServiceMapper extends BaseMapper<CustomerService> {
-    void deleteByCustomerIdAndServiceId(CustomerServiceRequest customerServiceRequest);
+public interface CustomerServiceMapper extends BaseMapper<CustomerProduct> {
+    void deleteByCustomerIdAndProductId(CustomerProductRequest customerProductRequest);
 }

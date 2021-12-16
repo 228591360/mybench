@@ -76,6 +76,12 @@ public class CustomerInfoRequest extends PageEntity implements Serializable {
     private BigDecimal creditAmount;
 
     /**
+     * 产品集合
+     */
+    @ApiModelProperty(value = "产品集合")
+    private String productList;
+
+    /**
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")

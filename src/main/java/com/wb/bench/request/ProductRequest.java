@@ -1,5 +1,6 @@
-package com.wb.bench.response;
+package com.wb.bench.request;
 
+import com.wb.bench.entity.PageEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -9,32 +10,28 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * @Author: WangBiao
+ * @Date: 2020/12/4 10:44
+ */
 @Data
 @ApiModel
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerServiceResponse implements Serializable {
-
-    private Integer id;
+public class ProductRequest extends PageEntity implements Serializable {
 
     /**
-     * customerId
+     * uuid
      */
-    @ApiModelProperty(value = "customer_id")
-    private String customerId;
 
-
-    /**
-     * 服务id
-     */
-    @ApiModelProperty(value = "服务id")
-    private String serviceId;
+    @ApiModelProperty(name = "id")
+    private String id;
 
     /**
-     * 服务名称
+     * 产品名称
      */
-    @ApiModelProperty(value = "服务名称")
-    private String serviceName;
+    @ApiModelProperty(name = "产品名称")
+    private String productName;
 
     /**
      * 创建时间

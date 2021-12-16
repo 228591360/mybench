@@ -1,5 +1,6 @@
 package com.wb.bench.service;
 
+import com.wb.bench.request.OutVinRequest;
 import com.wb.bench.request.VinRequest;
 
 public interface VinService {
@@ -9,5 +10,5 @@ public interface VinService {
 
     String freceivedata(String data);
 
-    String outDange(VinRequest vinRequest);
+    String outDange(OutVinRequest outVinRequest);
 }

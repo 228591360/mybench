@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 @ApiModel
 @AllArgsConstructor
 @NoArgsConstructor
-@Table( name ="customer_service" , schema = "")
-public class CustomerService implements Serializable {
+@Table( name ="customer_product" , schema = "")
+public class CustomerProduct implements Serializable {
     @Id
     @Column(name = "id", nullable = false)
     @TableId(type = IdType.AUTO)
@@ -36,20 +36,20 @@ public class CustomerService implements Serializable {
     /**
      * 服务id
      */
-    @Column(name = "service_id")
-    private String serviceId;
+    @Column(name = "product_id")
+    private String productId;
 
     /**
      * 服务名称
      */
-    @Column(name = "service_name")
-    private String serviceName;
+    @Column(name = "product_name")
+    private String productName;
 
     /**
      * 服务定价
      */
-    @Column(name = "service_price")
-    private String servicePrice;
+    @Column(name = "product_price")
+    private String productPrice;
 
     /**
      * 创建时间

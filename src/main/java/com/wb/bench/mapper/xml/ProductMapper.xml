@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wb.bench.mapper.ProductMapper">
+
+    <select id="queryProduct" resultType="com.wb.bench.response.ProductResponse">
+        select  * from product
+        <where>
+            <if test="productName!=null and productName!=''">and product_name like '%${productName}%'</if>
+        </where>
+        ORDER BY
+        create_time DESC
+    </select>
+</mapper>
