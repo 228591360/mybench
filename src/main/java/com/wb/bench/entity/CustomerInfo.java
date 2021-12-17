@@ -81,11 +81,6 @@ public class CustomerInfo implements Serializable {
     @Column(name = "credit_amount")
     private BigDecimal creditAmount;
 
-    /**
-     * 产品集合
-     */
-    @Column(name = "product_list")
-    private String productList;
 
     /**
      * 创建时间

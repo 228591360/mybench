@@ -31,16 +31,10 @@ public class OutVinRequest implements Serializable {
     private String vin;
 
     /**
-     * 服务号
+     * 产品id
      */
-    @ApiModelProperty(value = "车架号")
-    private String serviceId;
-
-    /**
-     * 服务名称
-     */
-    @ApiModelProperty(value = "服务名称")
-    private String serviceName;
-
+    @ApiModelProperty(value = "产品id")
+    @NotBlank(message = "产品id不能为空")
+    private String productId;
 
 }

@@ -38,10 +38,10 @@ public class VinRequest implements Serializable {
     private String callbackUrl;
 
     /**
-     * 服务号
+     * 产品id
      */
-    @ApiModelProperty(value = "服务号")
-    @NotBlank(message = "服务号不能为空")
+    @ApiModelProperty(value = "产品id")
+    @NotBlank(message = "产品id不能为空")
     private String productId;
 
 

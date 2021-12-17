@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wb.bench.entity.CustomerInfo;
+import com.wb.bench.entity.CustomerProduct;
 import com.wb.bench.entity.WbQueryLog;
 import com.wb.bench.exception.SbcRuntimeException;
 import com.wb.bench.mapper.CustomerInfoMapper;
@@ -59,12 +60,11 @@ public class VinServiceImpl implements VinService {
         if(Objects.isNull(customerInfo)){
             throw new SbcRuntimeException(1004,"用户未注册");
         }
-        if(Objects.isNull(customerInfo.getProductList())){
-            throw new SbcRuntimeException(1004,"用户无权限");
-        }
-        List<String> list =Arrays.asList(customerInfo.getProductList().split(","));
-        if(!list.contains("8000017dbeebc5da435431bf078176c7")){
-            throw new SbcRuntimeException(1004,"用户无权限");
+        QueryWrapper<CustomerProduct> customerProductQueryWrapper = new QueryWrapper<>();
+        customerProductQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
+        customerProductQueryWrapper.eq("product_id",vinRequest.getProductId());
+        if(customerServiceMapper.selectCount(customerProductQueryWrapper)<1){
+            throw new SbcRuntimeException("无权限调用服务");
         }
         LinkedHashMap map = new LinkedHashMap();
         map.put("callbackUrl",callbackUrl);
@@ -133,12 +133,11 @@ public class VinServiceImpl implements VinService {
         if(Objects.isNull(customerInfo)){
             throw new SbcRuntimeException(1004,"用户未注册");
         }
-        if(Objects.isNull(customerInfo.getProductList())){
-            throw new SbcRuntimeException(1004,"用户无权限");
-        }
-        List<String> list =Arrays.asList(customerInfo.getProductList().split(","));
-        if(!list.contains("8000017dbeebf35460805819fef4288d")){
-            throw new SbcRuntimeException(1004,"用户无权限");
+        QueryWrapper<CustomerProduct> customerProductQueryWrapper = new QueryWrapper<>();
+        customerProductQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
+        customerProductQueryWrapper.eq("product_id",outVinRequest.getProductId());
+        if(customerServiceMapper.selectCount(customerProductQueryWrapper)<1){
+            throw new SbcRuntimeException("无权限调用服务");
         }
         LinkedHashMap map = new LinkedHashMap<String ,Object>();
         map.put("customerId","e4775b980f5fa7f5f45d291742870cd4");
