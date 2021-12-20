@@ -154,6 +154,12 @@ public class VinServiceImpl implements VinService {
         map.put("sign",sign);
         String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
         System.out.println(end);
+        WbQueryLog wbQueryLog = new WbQueryLog();
+        wbQueryLog.setOrderId("出险查询");
+        wbQueryLog.setCallBackUrl("出险查询");
+        wbQueryLog.setCustomerId(customerInfo.getCustomerId());
+        wbQueryLog.setCreateTime(LocalDateTime.now());
+        wbQueryLogMapper.insert(wbQueryLog);
         return end;
     }
 
