@@ -15,13 +15,17 @@ import com.wb.bench.request.VinRequest;
 import com.wb.bench.service.VinService;
 import com.wb.bench.util.HttpClientUtil;
 import com.wb.bench.util.MD5Util;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
+@Slf4j
 public class VinServiceImpl implements VinService {
     final String URL ="https://www.miniscores.net:8313/CreditFunc/v2.1/VehicleInsuranceInfo";
     final String callbackUrl = "http://139.196.19.64:8082/freceivedata";
@@ -51,6 +55,11 @@ public class VinServiceImpl implements VinService {
         return  HttpClientUtil.doPostJson(URL, jsonString,mvTrackId);
     }
 
+    /**
+     * 维保查询接口
+     * @param vinRequest
+     * @return
+     */
     @Override
     public String queryVinInfo(VinRequest vinRequest){
         QueryWrapper<CustomerInfo> customerInfoQueryWrapper = new QueryWrapper<>();
@@ -60,11 +69,15 @@ public class VinServiceImpl implements VinService {
         if(Objects.isNull(customerInfo)){
             throw new SbcRuntimeException(1004,"用户未注册");
         }
+        if(customerInfo.getBalanceAmount().compareTo(BigDecimal.ZERO)<0){
+            throw new SbcRuntimeException(1005,"余额不足,请充值!");
+        }
         QueryWrapper<CustomerProduct> customerProductQueryWrapper = new QueryWrapper<>();
         customerProductQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
         customerProductQueryWrapper.eq("product_id",vinRequest.getProductId());
-        if(customerServiceMapper.selectCount(customerProductQueryWrapper)<1){
-            throw new SbcRuntimeException("无权限调用服务");
+        CustomerProduct customerProduct = customerServiceMapper.selectOne(customerProductQueryWrapper);
+        if(Objects.isNull(customerProduct)){
+            throw new SbcRuntimeException(1006,"无权限调用服务");
         }
         LinkedHashMap map = new LinkedHashMap();
         map.put("callbackUrl",callbackUrl);
@@ -87,6 +100,7 @@ public class VinServiceImpl implements VinService {
         String s = HttpClientUtil.doPost("http://cc2.thinkingleap.com/car-data/api/query/wb", map);
         JSONObject jsonObject = JSONObject.parseObject(s);
         if("查询成功".equals(jsonObject.get("message"))&&"0".equals(jsonObject.get("code"))){
+            //查询成功后添加查询日志
             WbQueryLog wbQueryLog = new WbQueryLog();
             wbQueryLog.setOrderId(jsonObject.get("orderid").toString());
             wbQueryLog.setCallBackUrl(vinRequest.getCallbackUrl());
@@ -97,6 +111,11 @@ public class VinServiceImpl implements VinService {
         return s;
     }
 
+    /**
+     * 维保回调接口
+     * @param data
+     * @return
+     */
     @Override
     public String freceivedata(String data) {
         byte[] result = Base64.getDecoder().decode(data.getBytes());
@@ -117,13 +136,21 @@ public class VinServiceImpl implements VinService {
         }
         String replace = s.replace("wbcl", "material").replace("wblc", "mileage")
                 .replace("wbrq", "date").replace("wbxm", "project").replace("wbzl", "category");
-        System.out.println(replace);
+        log.info("维保结果查询========{}",replace);
+        byte[] bytes = replace.getBytes(StandardCharsets.UTF_8);
+        String replaceDecode = Base64.getEncoder().encodeToString(bytes);
         Map map = new HashMap<String ,Object>();
-        map.put("data",replace);
+        map.put("data",replaceDecode);
         HttpClientUtil.doPost(callBackUrl, map);
+        //计费逻辑
         return "success";
     }
 
+    /**
+     * 出险查询
+     * @param outVinRequest
+     * @return
+     */
     @Override
     public String outDange(OutVinRequest outVinRequest) {
         QueryWrapper<CustomerInfo> customerInfoQueryWrapper = new QueryWrapper<>();
@@ -133,11 +160,15 @@ public class VinServiceImpl implements VinService {
         if(Objects.isNull(customerInfo)){
             throw new SbcRuntimeException(1004,"用户未注册");
         }
+        if(customerInfo.getBalanceAmount().compareTo(BigDecimal.ZERO)<0){
+            throw new SbcRuntimeException(1005,"余额不足,请充值!");
+        }
         QueryWrapper<CustomerProduct> customerProductQueryWrapper = new QueryWrapper<>();
         customerProductQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
         customerProductQueryWrapper.eq("product_id",outVinRequest.getProductId());
-        if(customerServiceMapper.selectCount(customerProductQueryWrapper)<1){
-            throw new SbcRuntimeException("无权限调用服务");
+        CustomerProduct customerProduct = customerServiceMapper.selectOne(customerProductQueryWrapper);
+        if(Objects.isNull(customerProduct)){
+            throw new SbcRuntimeException(1006,"无权限调用服务");
         }
         LinkedHashMap map = new LinkedHashMap<String ,Object>();
         map.put("customerId","e4775b980f5fa7f5f45d291742870cd4");
@@ -153,7 +184,7 @@ public class VinServiceImpl implements VinService {
         String sign = (MD5Util.md5Hex(endString, "utf-8"));
         map.put("sign",sign);
         String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
-        System.out.println(end);
+        log.info("出险查询结果===={}",end);
         WbQueryLog wbQueryLog = new WbQueryLog();
         wbQueryLog.setOrderId("出险查询");
         wbQueryLog.setCallBackUrl("出险查询");
@@ -216,5 +247,7 @@ public class VinServiceImpl implements VinService {
         System.out.println(map);
         String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
         System.out.println(JSON.parse(end));
+        JSONObject jsonObject = JSON.parseObject(end);
+        System.out.println(jsonObject.get("encrypt"));
     }
 }
