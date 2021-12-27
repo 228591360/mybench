@@ -126,8 +126,10 @@ public class VinServiceImpl implements VinService {
         WbQueryLog wbQueryLog = wbQueryLogMapper.selectOne(wbQueryLogQueryWrapper);
         String callBackUrl = wbQueryLog.getCallBackUrl();
         if("1001".equals(jsonObject.get("code").toString())){
+            byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
+            String replaceDecode = Base64.getEncoder().encodeToString(bytes);
             Map map = new HashMap<String ,Object>();
-            map.put("data",s);
+            map.put("data",replaceDecode);
             HttpClientUtil.doPost(callBackUrl, map);
             return "success";
         }
