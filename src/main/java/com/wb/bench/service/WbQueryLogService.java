@@ -1,5 +1,7 @@
 package com.wb.bench.service;
 
-public interface WbQueryLogService {
+import com.wb.bench.entity.WbQueryLog;
+
+public interface WbQueryLogService extends BaseService<WbQueryLog>{
 
 }

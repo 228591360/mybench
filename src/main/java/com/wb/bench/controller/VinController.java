@@ -1,10 +1,14 @@
 package com.wb.bench.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.wb.bench.base.BaseResponse;
+import com.wb.bench.entity.WbQueryLog;
 import com.wb.bench.request.OutVinRequest;
 import com.wb.bench.request.VinRequest;
 import com.wb.bench.service.VinService;
+import com.wb.bench.service.WbQueryLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.Base64;
 import java.util.Objects;
 
 @Slf4j
@@ -22,6 +27,9 @@ import java.util.Objects;
 public class VinController {
     @Resource
     private VinService vinService;
+
+    @Resource
+    private WbQueryLogService wbQueryLogService;
 
     @PostMapping("/queryInfo")
     @ApiOperation("")
@@ -63,6 +71,19 @@ public class VinController {
             return "fail";
         }
         System.out.println(data);
+        byte[] result = Base64.getDecoder().decode(data.getBytes());
+        String s = new String(result);
+        JSONObject jsonObject = JSONObject.parseObject(s);
+        if(!"查询成功".equals(jsonObject.get("message").toString())){
+            return "fail";
+        }
+        //计费逻辑
+        if("0".equals(jsonObject.get("code").toString())){
+            UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
+            wrapper.set("toll", "是");
+            wrapper.eq("order_id", jsonObject.get("orderid").toString());
+            wbQueryLogService.update(wrapper);
+        }
         return "success";
     }
 

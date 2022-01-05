@@ -3,6 +3,7 @@ package com.wb.bench.service.Impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.wb.bench.entity.CustomerInfo;
 import com.wb.bench.entity.CustomerProduct;
 import com.wb.bench.entity.WbQueryLog;
@@ -13,6 +14,7 @@ import com.wb.bench.mapper.WbQueryLogMapper;
 import com.wb.bench.request.OutVinRequest;
 import com.wb.bench.request.VinRequest;
 import com.wb.bench.service.VinService;
+import com.wb.bench.service.WbQueryLogService;
 import com.wb.bench.util.HttpClientUtil;
 import com.wb.bench.util.MD5Util;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +42,9 @@ public class VinServiceImpl implements VinService {
 
     @Autowired
     private WbQueryLogMapper wbQueryLogMapper;
+
+    @Autowired
+    private WbQueryLogService wbQueryLogService;
 
     @Override
     public String queryInfo(VinRequest vinRequest) throws Exception {
@@ -105,6 +110,7 @@ public class VinServiceImpl implements VinService {
             wbQueryLog.setOrderId(jsonObject.get("orderid").toString());
             wbQueryLog.setCallBackUrl(vinRequest.getCallbackUrl());
             wbQueryLog.setCustomerId(customerInfo.getCustomerId());
+            wbQueryLog.setToll("否");
             wbQueryLog.setCreateTime(LocalDateTime.now());
             wbQueryLogMapper.insert(wbQueryLog);
         }
@@ -145,6 +151,12 @@ public class VinServiceImpl implements VinService {
         map.put("data",replaceDecode);
         HttpClientUtil.doPost(callBackUrl, map);
         //计费逻辑
+        if("0".equals(jsonObject.get("code").toString())){
+            UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
+            wrapper.set("toll", "是");
+            wrapper.eq("order_id", jsonObject.get("orderid").toString());
+            wbQueryLogService.update(wrapper);
+        }
         return "success";
     }
 
@@ -187,10 +199,17 @@ public class VinServiceImpl implements VinService {
         map.put("sign",sign);
         String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
         log.info("出险查询结果===={}",end);
+        JSONObject jsonObject = JSON.parseObject(end);
+        String charge = JSON.parseObject(jsonObject.get("encrypt").toString()).get("charge").toString();
+        String toll ="否";
+        if("true".equals(charge)){
+            toll="是";
+        }
         WbQueryLog wbQueryLog = new WbQueryLog();
         wbQueryLog.setOrderId("出险查询");
         wbQueryLog.setCallBackUrl("出险查询");
         wbQueryLog.setCustomerId(customerInfo.getCustomerId());
+        wbQueryLog.setToll(toll);
         wbQueryLog.setCreateTime(LocalDateTime.now());
         wbQueryLogMapper.insert(wbQueryLog);
         return end;
@@ -251,5 +270,6 @@ public class VinServiceImpl implements VinService {
         System.out.println(JSON.parse(end));
         JSONObject jsonObject = JSON.parseObject(end);
         System.out.println(jsonObject.get("encrypt"));
+        System.out.println(JSON.parseObject(jsonObject.get("encrypt").toString()).get("charge"));
     }
 }

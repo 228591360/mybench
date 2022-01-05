@@ -45,6 +45,12 @@ public class WbQueryLog implements Serializable {
     private String customerId;
 
     /**
+     * 收费
+     */
+    @Column(name = "toll")
+    private String toll;
+
+    /**
      * 创建时间
      */
     @Column(name = "create_time")
