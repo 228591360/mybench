@@ -1,9 +1,13 @@
 package com.wb.bench.service.Impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
+import com.wb.bench.entity.BasePage;
 import com.wb.bench.entity.CustomerInfo;
 import com.wb.bench.entity.CustomerProduct;
 import com.wb.bench.entity.WbQueryLog;
@@ -12,7 +16,9 @@ import com.wb.bench.mapper.CustomerInfoMapper;
 import com.wb.bench.mapper.CustomerServiceMapper;
 import com.wb.bench.mapper.WbQueryLogMapper;
 import com.wb.bench.request.OutVinRequest;
+import com.wb.bench.request.StatisticsRequest;
 import com.wb.bench.request.VinRequest;
+import com.wb.bench.response.StatisticsResponse;
 import com.wb.bench.service.VinService;
 import com.wb.bench.service.WbQueryLogService;
 import com.wb.bench.util.HttpClientUtil;
@@ -107,9 +113,11 @@ public class VinServiceImpl implements VinService {
         if("查询成功".equals(jsonObject.get("message"))&&"0".equals(jsonObject.get("code"))){
             //查询成功后添加查询日志
             WbQueryLog wbQueryLog = new WbQueryLog();
+            wbQueryLog.setProductName("维保");
             wbQueryLog.setOrderId(jsonObject.get("orderid").toString());
             wbQueryLog.setCallBackUrl(vinRequest.getCallbackUrl());
             wbQueryLog.setCustomerId(customerInfo.getCustomerId());
+            wbQueryLog.setCustomerName(customerInfo.getCustomerName());
             wbQueryLog.setToll("否");
             wbQueryLog.setCreateTime(LocalDateTime.now());
             wbQueryLogMapper.insert(wbQueryLog);
@@ -206,13 +214,31 @@ public class VinServiceImpl implements VinService {
             toll="是";
         }
         WbQueryLog wbQueryLog = new WbQueryLog();
+        wbQueryLog.setProductName("出险");
         wbQueryLog.setOrderId("出险查询");
         wbQueryLog.setCallBackUrl("出险查询");
         wbQueryLog.setCustomerId(customerInfo.getCustomerId());
+        wbQueryLog.setCustomerName(customerInfo.getCustomerName());
         wbQueryLog.setToll(toll);
         wbQueryLog.setCreateTime(LocalDateTime.now());
         wbQueryLogMapper.insert(wbQueryLog);
         return end;
+    }
+
+    @Override
+    public BasePage<StatisticsResponse> queryPage(StatisticsRequest request) {
+        BasePage<StatisticsResponse> basePage = new BasePage<>();
+        basePage.setCurrent(request.getPage());
+        basePage.setSize(request.getLimit());
+        PageHelper.startPage(request.getPage(), request.getLimit());
+        List<StatisticsResponse> page = wbQueryLogMapper.queryPage(request);
+        if (CollectionUtil.isNotEmpty(page)) {
+            PageInfo<StatisticsResponse> pageInfo = new PageInfo<>(page);
+            //统计总条数
+            basePage.setTotal(pageInfo.getTotal());
+            basePage.setList(page);
+        }
+        return basePage;
     }
 
     public static void main(String[] args) throws Exception {

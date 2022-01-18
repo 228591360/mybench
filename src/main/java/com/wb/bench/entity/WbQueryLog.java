@@ -27,6 +27,12 @@ public class WbQueryLog implements Serializable {
     private Integer id;
 
     /**
+     * 产品名称
+     */
+    @Column(name = "product_name")
+    private String productName;
+
+    /**
      * 订单ID
      */
     @Column(name = "order_id")
@@ -43,6 +49,12 @@ public class WbQueryLog implements Serializable {
      */
     @Column(name = "customer_id")
     private String customerId;
+
+    /**
+     * 客户名称
+     */
+    @Column(name = "customer_name")
+    private String customerName;
 
     /**
      * 收费

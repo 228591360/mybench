@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wb.bench.mapper.WbQueryLogMapper">
+
+
+    <select id="queryPage" resultType="com.wb.bench.response.StatisticsResponse">
+        SELECT
+            customer_name,
+            product_name,
+            sum(if(toll = '是', 1, 0))  AS toll,
+            COUNT( id ) AS total
+        FROM
+            wb_query_log
+        <where>
+            <if test="customerName!=null and customerName!=''">and customer_name = #{customerName}</if>
+            <if test="customerId!=null and customerId!=''">and customer_id =#{customerId}</if>
+            <if test="timeBeg !=null and timeBeg !=null">
+                and DATE_FORMAT(create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{timeBeg},'%Y-%m-%d')
+            </if>
+            <if test="timeEnd !=null and timeEnd !=null">
+                and DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{timeEnd},'%Y-%m-%d')
+            </if>
+        </where>
+        GROUP BY
+            customer_id,
+            product_name
+
+    </select>
+</mapper>

@@ -4,9 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.wb.bench.base.BaseResponse;
+import com.wb.bench.common.R;
+import com.wb.bench.common.Result;
+import com.wb.bench.entity.BasePage;
 import com.wb.bench.entity.WbQueryLog;
 import com.wb.bench.request.OutVinRequest;
+import com.wb.bench.request.StatisticsRequest;
 import com.wb.bench.request.VinRequest;
+import com.wb.bench.response.StatisticsResponse;
 import com.wb.bench.service.VinService;
 import com.wb.bench.service.WbQueryLogService;
 import io.swagger.annotations.Api;
@@ -94,5 +99,16 @@ public class VinController {
     @ApiOperation("出险查询")
     public String outDange(@RequestBody @Validated OutVinRequest outVinRequest){
         return vinService.outDange(outVinRequest);
+    }
+
+
+    /**
+     * 查询统计
+     */
+    @ApiOperation("查询统计分页")
+    @PostMapping(value = "/statisticsPage")
+    public Result<BasePage<StatisticsResponse>> queryPage(@RequestBody @Validated StatisticsRequest request){
+        BasePage<StatisticsResponse> statisticsResponseBasePage = vinService.queryPage(request);
+        return R.ok(statisticsResponseBasePage);
     }
 }
