@@ -20,6 +20,11 @@ public class ProductCode implements Serializable {
     private String chuXianCode="8000017dbeebf35460805819fef4288d";
 
     /**
+     * 异步出险
+     */
+    private String YiBuChuXianCode="8000017dbeebf35460805819fef4288g";
+
+    /**
      * 唯品维保
      */
     private String vipShopWBCode="8000017dbeebf35460805819fef4288f";

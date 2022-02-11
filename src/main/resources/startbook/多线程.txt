@@ -62,6 +62,10 @@ notify和notifyAll的区别
     并行：多个处理器或多核处理器同时处理多个任务
     并发：多个任务在同一个CPU核上，一个处理器处理多个任务
 
+synchronized实现原理：
+    JVM对于同步方法和同步代码块的处理方式不同。
+    对于同步方法，JVM采用ACC_SYNCHRONIZED标记符来实现同步。 对于同步代码块。JVM采用monitorenter（加锁）计数器加1 为0是则没有加锁、monitorexit（释放锁）两个指令来实现同步。
+
 synchronized和Lock的区别
     都属于悲观锁
     首先synchronized是java内置关键字，在jvm层面，Lock是个java类；
@@ -104,7 +108,7 @@ ThreadLocal是什么？使用场景
 
     当线程池中的线程数目达到corePoolSize后，就会把到达的任务放入缓存队列中。
 
-    2.maximumPoolSize:线程池能够容纳同时执行的最大线程数，此值必须大于等于1
+    2.maximumPoolSize:线程池能够容纳同时执行的最大线程数，此值必须大于等于1（当队列满的时候会创建额外线程，线程数为最大线程数量，当任务消费完根据空闲存活时间线程自行销毁）
 
     3.keepAliveTime:多余的空闲线程的存活时间。
 
@@ -114,10 +118,10 @@ ThreadLocal是什么？使用场景
 
         默认情况下，只有当线程池中的线程数大于corePoolSize时，keepAliveTime才会起作用，直到线程池找那个的线程数不大于corePoolSize。
 
-    4.unit:keepAliveTime的单位
+    4.unit : keepAliveTime的单位
 
-    5.workQueue：任务队列，被提交但尚未被执行的任务
+    5.workQueue：任务队列，被提交但尚未被执行的任务 队列长度
 
     6.threadFactory：表示生成线程池中工作线程的线程工厂，用于创建线程一般默认即可
 
-    7.handler：拒绝策略，表示当队列满了并且工作线程大于等于线程池最大线程数（maximumPoolSize）时如何处理
+    7.RejectedExecutionHandler：拒绝策略，表示当队列满了并且工作线程大于等于线程池最大线程数（maximumPoolSize）时如何处理

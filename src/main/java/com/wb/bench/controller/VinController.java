@@ -8,9 +8,8 @@ import com.wb.bench.common.R;
 import com.wb.bench.common.Result;
 import com.wb.bench.entity.BasePage;
 import com.wb.bench.entity.WbQueryLog;
-import com.wb.bench.request.OutVinRequest;
-import com.wb.bench.request.StatisticsRequest;
-import com.wb.bench.request.VinRequest;
+import com.wb.bench.request.*;
+import com.wb.bench.response.OutDangerBackResponse;
 import com.wb.bench.response.StatisticsResponse;
 import com.wb.bench.service.VinService;
 import com.wb.bench.service.WbQueryLogService;
@@ -102,6 +101,45 @@ public class VinController {
     }
 
 
+    /**
+     * 出险查询异步
+     */
+    @PostMapping("/outDanger")
+    @ApiOperation("出险查询")
+    public String outDanger(@RequestBody @Validated OutDangerRequest request){
+        return vinService.outDanger(request);
+    }
+
+    /**
+     * 出险查询异步
+     */
+    @PostMapping("/outDangerBackData")
+    @ApiOperation("出险查询回调")
+    public OutDangerBackResponse outDangerBackData(@RequestBody @Validated OutDangerBackRequest request){
+        OutDangerBackResponse outDangerBackResponse = new OutDangerBackResponse();
+        if(Objects.isNull(request)){
+            outDangerBackResponse.setCode(-1);
+            return outDangerBackResponse;
+        }
+        return vinService.outDangerBackData(request);
+    }
+
+
+
+    /**
+     * 出险查询异步
+     */
+    @PostMapping("/outDangerBackDataTest")
+    @ApiOperation("出险查询回调")
+    public OutDangerBackResponse outDangerBackDataTest(String data){
+        OutDangerBackResponse outDangerBackResponse = new OutDangerBackResponse();
+        if(Objects.isNull(data)){
+            outDangerBackResponse.setCode(-1);
+            return outDangerBackResponse;
+        }
+        outDangerBackResponse.setCode(0);
+        return outDangerBackResponse;
+    }
     /**
      * 查询统计
      */

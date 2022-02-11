@@ -17,3 +17,8 @@ SpringCloud 服务间的通信方式有两种
     RestTemplate 方式
     Feign 的方式
     也就是说SpringCould是Http请求。
+
+
+    服务启动把ip端口注册到 eureka 服务注册发现 通过feign来请求接口
+
+ springCloud和dubbo的对比
