@@ -106,7 +106,7 @@ public class VinController {
      */
     @PostMapping("/outDanger")
     @ApiOperation("出险查询")
-    public String outDanger(@RequestBody @Validated OutDangerRequest request){
+    public JSONObject outDanger(@RequestBody @Validated OutDangerRequest request){
         return vinService.outDanger(request);
     }
 

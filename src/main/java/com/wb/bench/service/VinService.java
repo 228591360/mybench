@@ -1,5 +1,6 @@
 package com.wb.bench.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.wb.bench.entity.BasePage;
 import com.wb.bench.request.*;
 import com.wb.bench.response.OutDangerBackResponse;
@@ -14,7 +15,7 @@ public interface VinService {
 
     String outDange(OutVinRequest outVinRequest);
 
-    String outDanger(OutDangerRequest request);
+    JSONObject outDanger(OutDangerRequest request);
 
     OutDangerBackResponse outDangerBackData(OutDangerBackRequest request);
 

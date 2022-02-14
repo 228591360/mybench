@@ -230,7 +230,7 @@ public class VinServiceImpl implements VinService {
     }
 
     @Override
-    public String outDanger(OutDangerRequest request) {
+    public JSONObject outDanger(OutDangerRequest request) {
         QueryWrapper<CustomerInfo> customerInfoQueryWrapper = new QueryWrapper<>();
         customerInfoQueryWrapper.eq("customer_account",request.getCustomerAccount());
         customerInfoQueryWrapper.eq("customer_password",request.getCustomerPassword());
@@ -281,7 +281,7 @@ public class VinServiceImpl implements VinService {
         wbQueryLog.setToll(charge.equals("false")?"否":"是");
         wbQueryLog.setCreateTime(LocalDateTime.now());
         wbQueryLogMapper.insert(wbQueryLog);
-        return end;
+        return resultObject;
     }
 
     @Override
