@@ -105,7 +105,7 @@ public class VinController {
      * 出险查询异步
      */
     @PostMapping("/outDanger")
-    @ApiOperation("出险查询")
+    @ApiOperation("异步出险查询")
     public JSONObject outDanger(@RequestBody @Validated OutDangerRequest request){
         return vinService.outDanger(request);
     }
