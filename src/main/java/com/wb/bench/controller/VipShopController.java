@@ -31,8 +31,9 @@ public class VipShopController {
      * @return
      */
     @PostMapping("/order/weibao")
-    @ApiOperation("维保查询")
+    @ApiOperation("唯品维保查询")
     public String queryVinInfo(@RequestBody @Validated VipShopRequest vipShopRequest){
+        log.info("唯品维保查询入口=================");
         String s = vipShopService.weiBao(vipShopRequest);
         return JSON.parse(s).toString();
     }
@@ -45,6 +46,7 @@ public class VipShopController {
     @PostMapping("/weibao/callback")
     @ApiOperation("唯品维保回调")
     public VipShopResponse callbackData(@RequestBody @Validated VipShopCallbackRequest vipShopCallbackRequest){
+        log.info("唯品维保回调=================");
         VipShopResponse vipShopResponse = new VipShopResponse();
         if(Objects.isNull(vipShopCallbackRequest)){
             vipShopResponse.setCode(-1);

@@ -50,6 +50,7 @@ public class VinController {
     @PostMapping("/v1/queryInfo")
     @ApiOperation("维保查询")
     public String queryVinInfo(@RequestBody @Validated VinRequest vinRequest){
+        log.info("维保查询入口=================");
         String s = vinService.queryVinInfo(vinRequest);
         return JSON.parse(s).toString();
     }
@@ -62,6 +63,7 @@ public class VinController {
     @PostMapping("/freceivedata")
     @ApiOperation("维保回调")
     public String freceivedata(String data){
+        log.info("维保回调=================");
         if(Objects.isNull(data)){
             return "fail";
         }
@@ -97,6 +99,7 @@ public class VinController {
     @PostMapping("/outDange")
     @ApiOperation("出险查询")
     public String outDange(@RequestBody @Validated OutVinRequest outVinRequest){
+        log.info("出险查询入口=================");
         return vinService.outDange(outVinRequest);
     }
 
@@ -107,6 +110,7 @@ public class VinController {
     @PostMapping("/outDanger")
     @ApiOperation("异步出险查询")
     public JSONObject outDanger(@RequestBody @Validated OutDangerRequest request){
+        log.info("异步出险查询入口=================");
         return vinService.outDanger(request);
     }
 
@@ -116,6 +120,7 @@ public class VinController {
     @PostMapping("/outDangerBackData")
     @ApiOperation("出险查询回调")
     public OutDangerBackResponse outDangerBackData(@RequestBody @Validated OutDangerBackRequest request){
+        log.info("出险查询回调=================");
         OutDangerBackResponse outDangerBackResponse = new OutDangerBackResponse();
         if(Objects.isNull(request)){
             outDangerBackResponse.setCode(-1);
