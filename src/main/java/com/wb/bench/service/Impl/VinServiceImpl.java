@@ -117,6 +117,7 @@ public class VinServiceImpl implements VinService {
         if("查询成功".equals(jsonObject.get("message"))&&"0".equals(jsonObject.get("code"))){
             //查询成功后添加查询日志
             WbQueryLog wbQueryLog = new WbQueryLog();
+            wbQueryLog.setVin(vinRequest.getVin());
             wbQueryLog.setProductName("维保");
             wbQueryLog.setOrderId(jsonObject.get("orderid").toString());
             wbQueryLog.setCallBackUrl(vinRequest.getCallbackUrl());
@@ -218,6 +219,7 @@ public class VinServiceImpl implements VinService {
             toll="是";
         }
         WbQueryLog wbQueryLog = new WbQueryLog();
+        wbQueryLog.setVin(outVinRequest.getVin());
         wbQueryLog.setProductName("出险");
         wbQueryLog.setOrderId("出险查询");
         wbQueryLog.setCallBackUrl("出险查询");
@@ -273,6 +275,7 @@ public class VinServiceImpl implements VinService {
         String orderId = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("gid").toString();
         String charge = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("charge").toString();
         WbQueryLog wbQueryLog = new WbQueryLog();
+        wbQueryLog.setVin(request.getVin());
         wbQueryLog.setProductName("异步出险");
         wbQueryLog.setOrderId(orderId);
         wbQueryLog.setCallBackUrl(request.getCallbackUrl());

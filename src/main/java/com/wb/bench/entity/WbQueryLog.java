@@ -33,6 +33,12 @@ public class WbQueryLog implements Serializable {
     private String productName;
 
     /**
+     * 车架
+     */
+    @Column(name = "vin")
+    private String vin;
+
+    /**
      * 订单ID
      */
     @Column(name = "order_id")
