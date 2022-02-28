@@ -33,7 +33,7 @@ public class VipShopController {
     @PostMapping("/order/weibao")
     @ApiOperation("唯品维保查询")
     public String queryVinInfo(@RequestBody @Validated VipShopRequest vipShopRequest){
-        log.info("唯品维保查询入口=================");
+        log.info("唯品维保查询入口================={}",vipShopRequest.getVin());
         String s = vipShopService.weiBao(vipShopRequest);
         return JSON.parse(s).toString();
     }

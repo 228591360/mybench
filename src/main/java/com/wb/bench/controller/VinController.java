@@ -50,7 +50,7 @@ public class VinController {
     @PostMapping("/v1/queryInfo")
     @ApiOperation("维保查询")
     public String queryVinInfo(@RequestBody @Validated VinRequest vinRequest){
-        log.info("维保查询入口=================");
+        log.info("维保查询入口================={}",vinRequest.getVin());
         String s = vinService.queryVinInfo(vinRequest);
         return JSON.parse(s).toString();
     }
@@ -99,7 +99,7 @@ public class VinController {
     @PostMapping("/outDange")
     @ApiOperation("出险查询")
     public String outDange(@RequestBody @Validated OutVinRequest outVinRequest){
-        log.info("出险查询入口=================");
+        log.info("出险查询入口================={}",outVinRequest.getVin());
         return vinService.outDange(outVinRequest);
     }
 
@@ -110,7 +110,7 @@ public class VinController {
     @PostMapping("/outDanger")
     @ApiOperation("异步出险查询")
     public JSONObject outDanger(@RequestBody @Validated OutDangerRequest request){
-        log.info("异步出险查询入口=================");
+        log.info("异步出险查询入口================={}",request.getVin());
         return vinService.outDanger(request);
     }
 
