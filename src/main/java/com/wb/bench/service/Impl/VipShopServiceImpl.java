@@ -24,6 +24,7 @@ import com.wb.bench.util.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -180,10 +181,11 @@ public class VipShopServiceImpl implements VipShopService {
         WbQueryLog wbQueryLog = wbQueryLogMapper.selectOne(wbQueryLogQueryWrapper);
         String callBackUrl = wbQueryLog.getCallBackUrl();
         if(0==code){
-            UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
-            wrapper.set("toll", "是");
-            wrapper.eq("order_id", orderId);
-            wbQueryLogService.update(wrapper);
+            UpdateWrapper<WbQueryLog> wrapper2 = new UpdateWrapper<>();
+            wrapper2.set("toll", "是");
+            wrapper2.eq("order_id", orderId);
+            wbQueryLogService.update(wrapper2);
+            deduction(wbQueryLog.getCustomerId(),productCode.getVipShopWBCode());
         }
         byte[] bytes = JSON.toJSONString(vipShopCallbackRequest).getBytes(StandardCharsets.UTF_8);
         String replaceDecode = java.util.Base64.getEncoder().encodeToString(bytes);
@@ -191,9 +193,29 @@ public class VipShopServiceImpl implements VipShopService {
         map.put("data",replaceDecode);
         String s = HttpClientUtil.doPost(callBackUrl, map);
         System.out.println("唯品维保回调地址返回数据：========" +s);
+        //保存结果
+        UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
+        wrapper.set("result", replaceDecode);
+        wrapper.eq("order_id", orderId);
+        wbQueryLogService.update(wrapper);
         VipShopResponse vipShopResponse = new VipShopResponse();
         vipShopResponse.setCode(Integer.valueOf(JSONObject.parseObject(s).get("code").toString()));
         vipShopResponse.setMsg(JSONObject.parseObject(s).get("msg").toString());
         return vipShopResponse;
+    }
+
+    /**
+     * 扣费逻辑
+     * @param customerId
+     */
+    @Async
+    public void deduction(String customerId,String code) {
+        CustomerInfo customerInfo = customerInfoMapper.selectById(customerId);
+        QueryWrapper<CustomerProduct> customerProductQueryWrapper = new QueryWrapper<>();
+        customerProductQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
+        customerProductQueryWrapper.eq("product_id",code);
+        CustomerProduct customerProduct = customerServiceMapper.selectOne(customerProductQueryWrapper);
+        customerInfo.setBalanceAmount(customerInfo.getBalanceAmount().subtract(customerProduct.getProductPrice()));
+        customerInfoMapper.updateById(customerInfo);
     }
 }

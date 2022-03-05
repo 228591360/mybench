@@ -2,12 +2,10 @@ package com.wb.bench.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.wb.bench.base.BaseResponse;
 import com.wb.bench.common.R;
 import com.wb.bench.common.Result;
 import com.wb.bench.entity.BasePage;
-import com.wb.bench.entity.WbQueryLog;
 import com.wb.bench.request.*;
 import com.wb.bench.response.OutDangerBackResponse;
 import com.wb.bench.response.StatisticsResponse;
@@ -22,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.Base64;
 import java.util.Objects;
 
 @Slf4j
@@ -75,20 +72,6 @@ public class VinController {
     public String backdata(String data){
         if(Objects.isNull(data)){
             return "fail";
-        }
-        System.out.println(data);
-        byte[] result = Base64.getDecoder().decode(data.getBytes());
-        String s = new String(result);
-        JSONObject jsonObject = JSONObject.parseObject(s);
-        if(!"查询成功".equals(jsonObject.get("message").toString())){
-            return "fail";
-        }
-        //计费逻辑
-        if("0".equals(jsonObject.get("code").toString())){
-            UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
-            wrapper.set("toll", "是");
-            wrapper.eq("order_id", jsonObject.get("orderid").toString());
-            wbQueryLogService.update(wrapper);
         }
         return "success";
     }

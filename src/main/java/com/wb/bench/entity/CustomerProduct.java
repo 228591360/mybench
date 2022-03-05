@@ -12,6 +12,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -49,7 +50,7 @@ public class CustomerProduct implements Serializable {
      * 服务定价
      */
     @Column(name = "product_price")
-    private String productPrice;
+    private BigDecimal productPrice;
 
     /**
      * 创建时间

@@ -68,6 +68,13 @@ public class WbQueryLog implements Serializable {
     @Column(name = "toll")
     private String toll;
 
+
+    /**
+     * 查询结果
+     */
+    @Column(name = "result")
+    private String result;
+
     /**
      * 创建时间
      */

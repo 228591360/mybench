@@ -26,6 +26,7 @@ import com.wb.bench.util.MD5Util;
 import com.wb.bench.util.UnicodeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -144,12 +145,18 @@ public class VinServiceImpl implements VinService {
         wbQueryLogQueryWrapper.eq("order_id",jsonObject.get("orderid").toString());
         WbQueryLog wbQueryLog = wbQueryLogMapper.selectOne(wbQueryLogQueryWrapper);
         String callBackUrl = wbQueryLog.getCallBackUrl();
+        String customerId = wbQueryLog.getCustomerId();
         if("1001".equals(jsonObject.get("code").toString())){
             byte[] bytes = s.getBytes(StandardCharsets.UTF_8);
             String replaceDecode = Base64.getEncoder().encodeToString(bytes);
             Map map = new HashMap<String ,Object>();
             map.put("data",replaceDecode);
             HttpClientUtil.doPost(callBackUrl, map);
+            //保存查询结果
+            UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
+            wrapper.set("result", s);
+            wrapper.eq("order_id", jsonObject.get("orderid").toString());
+            wbQueryLogService.update(wrapper);
             return "success";
         }
         if(!"查询成功".equals(jsonObject.get("message").toString())){
@@ -163,14 +170,35 @@ public class VinServiceImpl implements VinService {
         Map map = new HashMap<String ,Object>();
         map.put("data",replaceDecode);
         HttpClientUtil.doPost(callBackUrl, map);
-        //计费逻辑
+        //保存查询结果
+        UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
+        wrapper.set("result", replace);
+        wrapper.eq("order_id", jsonObject.get("orderid").toString());
+        wbQueryLogService.update(wrapper);
+        //查询成功计费
         if("0".equals(jsonObject.get("code").toString())){
-            UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
-            wrapper.set("toll", "是");
-            wrapper.eq("order_id", jsonObject.get("orderid").toString());
-            wbQueryLogService.update(wrapper);
+            UpdateWrapper<WbQueryLog> wrapper2 = new UpdateWrapper<>();
+            wrapper2.set("toll", "是");
+            wrapper2.eq("order_id", jsonObject.get("orderid").toString());
+            wbQueryLogService.update(wrapper2);
+            deduction(customerId,productCode.getWbCode());
         }
         return "success";
+    }
+
+    /**
+     * 扣费逻辑
+     * @param customerId
+     */
+    @Async
+    public void deduction(String customerId,String code) {
+        CustomerInfo customerInfo = customerInfoMapper.selectById(customerId);
+        QueryWrapper<CustomerProduct> customerProductQueryWrapper = new QueryWrapper<>();
+        customerProductQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
+        customerProductQueryWrapper.eq("product_id",code);
+        CustomerProduct customerProduct = customerServiceMapper.selectOne(customerProductQueryWrapper);
+        customerInfo.setBalanceAmount(customerInfo.getBalanceAmount().subtract(customerProduct.getProductPrice()));
+        customerInfoMapper.updateById(customerInfo);
     }
 
     /**
@@ -226,8 +254,10 @@ public class VinServiceImpl implements VinService {
         wbQueryLog.setCustomerId(customerInfo.getCustomerId());
         wbQueryLog.setCustomerName(customerInfo.getCustomerName());
         wbQueryLog.setToll(toll);
+        wbQueryLog.setResult(end);
         wbQueryLog.setCreateTime(LocalDateTime.now());
         wbQueryLogMapper.insert(wbQueryLog);
+        deduction(customerInfo.getCustomerId(),productCode.getChuXianCode());
         return end;
     }
 
@@ -308,11 +338,18 @@ public class VinServiceImpl implements VinService {
         map.put("data",replaceDecode);
         String s = HttpClientUtil.doPost(callBackUrl, map);
         System.out.println("异步出险回调地址返回数据：========" +s);
+        //保存结果
+        UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
+        wrapper.set("result", json);
+        wrapper.eq("order_id", gid);
+        wbQueryLogService.update(wrapper);
+        //查询成功扣费
         if(charge.equals("true")){
-            UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
-            wrapper.set("toll", "是");
-            wrapper.eq("order_id", gid);
-            wbQueryLogService.update(wrapper);
+            UpdateWrapper<WbQueryLog> wrapper2 = new UpdateWrapper<>();
+            wrapper2.set("toll", "是");
+            wrapper2.eq("order_id", gid);
+            wbQueryLogService.update(wrapper2);
+            deduction(wbQueryLog.getCustomerId(),productCode.getYiBuChuXianCode());
         }
         OutDangerBackResponse outDangerBackResponse = new OutDangerBackResponse();
         outDangerBackResponse.setCode(Integer.valueOf(JSONObject.parseObject(s).get("code").toString()));
