@@ -64,7 +64,7 @@ notify和notifyAll的区别
 
 synchronized实现原理：
     JVM对于同步方法和同步代码块的处理方式不同。
-    对于同步方法，JVM采用ACC_SYNCHRONIZED标记符来实现同步。 对于同步代码块。JVM采用monitorenter（加锁）计数器加1 为0是则没有加锁、monitorexit（释放锁）两个指令来实现同步。
+    对于同步方法，JVM采用ACC_SYNCHRONIZED标记符来实现同步。 对于同步代码块。JVM采用moniterenter（加锁）计数器加1 为0是则没有加锁、monitorexit（释放锁）两个指令来实现同步。
 
 synchronized和Lock的区别
     都属于悲观锁
@@ -74,6 +74,9 @@ synchronized和Lock的区别
     Lock需要自己加锁和释放锁，如果使用不当没有unLock()去释放锁就会造成死锁
     通过Lock可以知道有没有成功获取锁，而synchronized没法办到
     性能上面讲的话 Lock效率高一些
+
+Volatile缓存可见性实现原理
+    底层实现主要是通过汇编lock前缀指令，它会锁定这块内存区域的缓存(缓存行锁定)并回写到主内存
 
 synchronized和volatile区别
     volatile是变量修饰符；synchronized是修饰类、方法、代码段
@@ -125,3 +128,13 @@ ThreadLocal是什么？使用场景
     6.threadFactory：表示生成线程池中工作线程的线程工厂，用于创建线程一般默认即可
 
     7.RejectedExecutionHandler：拒绝策略，表示当队列满了并且工作线程大于等于线程池最大线程数（maximumPoolSize）时如何处理
+        四种拒绝策略:
+        AbortPolicy 直接抛出RejectedExecutionExeception异常来阻止系统正常运行
+        CallerRunsPolicy 将任务回退到调用者
+        DisOldestPolicy 丢掉等待最久的任务
+        DisCardPolicy 直接丢弃任务
+
+线程池底层实现原理:
+    首先调用executor()执行任务，进入线程池，此时线程数还未超过corePoolSize,当线程数超过corePoolSize时，
+    线程会进入阻塞队列等待，当阻塞队列的线程存到一定数量时，线程池会扩容，但不会超过最大线程数，maximumPoolSize,
+    当线程数量超过最大线程数时，线程池会启动拒绝策略，来保证任务正常进行，当任务线程数越来越少时，会逐渐恢复到corePoolSize
