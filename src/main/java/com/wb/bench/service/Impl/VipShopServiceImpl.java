@@ -161,6 +161,7 @@ public class VipShopServiceImpl implements VipShopService {
         String orderId = JSONObject.parseObject(resultObject.get("data").toString()).get("orderId").toString();
         WbQueryLog wbQueryLog = new WbQueryLog();
         wbQueryLog.setVin(vipShopRequest.getVin());
+        wbQueryLog.setProductId(customerProduct.getProductId());
         wbQueryLog.setProductName("唯品维保");
         wbQueryLog.setOrderId(orderId);
         wbQueryLog.setCallBackUrl(vipShopRequest.getCallbackUrl());

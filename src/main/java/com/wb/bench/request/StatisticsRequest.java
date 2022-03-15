@@ -22,6 +22,19 @@ public class StatisticsRequest extends PageEntity implements Serializable  {
     @ApiModelProperty(value = "客户Id")
     private String customerId;
 
+
+    /**
+     * 产品名称
+     */
+    @ApiModelProperty(value = "产品名称")
+    private String productName;
+
+    /**
+     * 产品id
+     */
+    @ApiModelProperty(value = "产品id")
+    private String productId;
+
     /**
      * 开始时间
      */

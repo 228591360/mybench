@@ -14,6 +14,8 @@
         <where>
             <if test="customerName!=null and customerName!=''">and customer_name = #{customerName}</if>
             <if test="customerId!=null and customerId!=''">and customer_id =#{customerId}</if>
+            <if test="productName!=null and productName!=''">and product_name = #{productName}</if>
+            <if test="productId!=null and productId!=''">and product_id =#{productId}</if>
             <if test="timeBeg !=null and timeBeg !=null">
                 and DATE_FORMAT(create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{timeBeg},'%Y-%m-%d')
             </if>
@@ -25,5 +27,26 @@
             customer_id,
             product_name
 
+    </select>
+    <select id="queryLog" resultType="com.wb.bench.response.LogResponse">
+        SELECT
+        *
+        FROM
+        wb_query_log
+        <where>
+            <if test="vin!=null and vin!=''">and vin = #{vin}</if>
+            <if test="customerName!=null and customerName!=''">and customer_name = #{customerName}</if>
+            <if test="customerId!=null and customerId!=''">and customer_id =#{customerId}</if>
+            <if test="productName!=null and productName!=''">and product_name = #{productName}</if>
+            <if test="productId!=null and productId!=''">and product_id =#{productId}</if>
+            <if test="timeBeg !=null and timeBeg !=null">
+                and DATE_FORMAT(create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{timeBeg},'%Y-%m-%d')
+            </if>
+            <if test="timeEnd !=null and timeEnd !=null">
+                and DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{timeEnd},'%Y-%m-%d')
+            </if>
+        </where>
+        order by
+        create_time desc
     </select>
 </mapper>

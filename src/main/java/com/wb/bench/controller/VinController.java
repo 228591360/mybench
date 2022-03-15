@@ -7,6 +7,7 @@ import com.wb.bench.common.R;
 import com.wb.bench.common.Result;
 import com.wb.bench.entity.BasePage;
 import com.wb.bench.request.*;
+import com.wb.bench.response.LogResponse;
 import com.wb.bench.response.OutDangerBackResponse;
 import com.wb.bench.response.StatisticsResponse;
 import com.wb.bench.service.VinService;
@@ -136,5 +137,12 @@ public class VinController {
     public Result<BasePage<StatisticsResponse>> queryPage(@RequestBody @Validated StatisticsRequest request){
         BasePage<StatisticsResponse> statisticsResponseBasePage = vinService.queryPage(request);
         return R.ok(statisticsResponseBasePage);
+    }
+
+    @ApiOperation("查询历史日志分页")
+    @PostMapping(value = "/queryLog")
+    public Result<BasePage<LogResponse>> queryLog(@RequestBody @Validated LogRequest request){
+        BasePage<LogResponse> responseBasePage = vinService.queryLog(request);
+        return R.ok(responseBasePage);
     }
 }

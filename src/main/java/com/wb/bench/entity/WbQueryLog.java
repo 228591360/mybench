@@ -26,6 +26,13 @@ public class WbQueryLog implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
+
+    /**
+     * 产品id
+     */
+    @Column(name = "product_id")
+    private String productId;
+
     /**
      * 产品名称
      */

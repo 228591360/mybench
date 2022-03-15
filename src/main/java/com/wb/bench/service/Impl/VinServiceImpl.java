@@ -17,6 +17,7 @@ import com.wb.bench.mapper.CustomerInfoMapper;
 import com.wb.bench.mapper.CustomerServiceMapper;
 import com.wb.bench.mapper.WbQueryLogMapper;
 import com.wb.bench.request.*;
+import com.wb.bench.response.LogResponse;
 import com.wb.bench.response.OutDangerBackResponse;
 import com.wb.bench.response.StatisticsResponse;
 import com.wb.bench.service.VinService;
@@ -119,6 +120,7 @@ public class VinServiceImpl implements VinService {
             //查询成功后添加查询日志
             WbQueryLog wbQueryLog = new WbQueryLog();
             wbQueryLog.setVin(vinRequest.getVin());
+            wbQueryLog.setProductId(customerProduct.getProductId());
             wbQueryLog.setProductName("维保");
             wbQueryLog.setOrderId(jsonObject.get("orderid").toString());
             wbQueryLog.setCallBackUrl(vinRequest.getCallbackUrl());
@@ -248,6 +250,7 @@ public class VinServiceImpl implements VinService {
         }
         WbQueryLog wbQueryLog = new WbQueryLog();
         wbQueryLog.setVin(outVinRequest.getVin());
+        wbQueryLog.setProductId(customerProduct.getProductId());
         wbQueryLog.setProductName("出险");
         wbQueryLog.setOrderId("出险查询");
         wbQueryLog.setCallBackUrl("出险查询");
@@ -306,6 +309,7 @@ public class VinServiceImpl implements VinService {
         String charge = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("charge").toString();
         WbQueryLog wbQueryLog = new WbQueryLog();
         wbQueryLog.setVin(request.getVin());
+        wbQueryLog.setProductId(customerProduct.getProductId());
         wbQueryLog.setProductName("异步出险");
         wbQueryLog.setOrderId(orderId);
         wbQueryLog.setCallBackUrl(request.getCallbackUrl());
@@ -365,6 +369,22 @@ public class VinServiceImpl implements VinService {
         List<StatisticsResponse> page = wbQueryLogMapper.queryPage(request);
         if (CollectionUtil.isNotEmpty(page)) {
             PageInfo<StatisticsResponse> pageInfo = new PageInfo<>(page);
+            //统计总条数
+            basePage.setTotal(pageInfo.getTotal());
+            basePage.setList(page);
+        }
+        return basePage;
+    }
+
+    @Override
+    public BasePage<LogResponse> queryLog(LogRequest request) {
+        BasePage<LogResponse> basePage = new BasePage<>();
+        basePage.setCurrent(request.getPage());
+        basePage.setSize(request.getLimit());
+        PageHelper.startPage(request.getPage(), request.getLimit());
+        List<LogResponse> page = wbQueryLogMapper.queryLog(request);
+        if (CollectionUtil.isNotEmpty(page)) {
+            PageInfo<LogResponse> pageInfo = new PageInfo<>(page);
             //统计总条数
             basePage.setTotal(pageInfo.getTotal());
             basePage.setList(page);

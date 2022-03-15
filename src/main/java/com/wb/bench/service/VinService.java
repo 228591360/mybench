@@ -3,6 +3,7 @@ package com.wb.bench.service;
 import com.alibaba.fastjson.JSONObject;
 import com.wb.bench.entity.BasePage;
 import com.wb.bench.request.*;
+import com.wb.bench.response.LogResponse;
 import com.wb.bench.response.OutDangerBackResponse;
 import com.wb.bench.response.StatisticsResponse;
 
@@ -20,5 +21,7 @@ public interface VinService {
     OutDangerBackResponse outDangerBackData(OutDangerBackRequest request);
 
     BasePage<StatisticsResponse> queryPage(StatisticsRequest request);
+
+    BasePage<LogResponse> queryLog(LogRequest request);
 
 }
