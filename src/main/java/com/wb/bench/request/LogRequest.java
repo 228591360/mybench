@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
 public class LogRequest extends PageEntity implements Serializable  {
@@ -74,12 +73,12 @@ public class LogRequest extends PageEntity implements Serializable  {
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")
-    private LocalDateTime timeBeg;
+    private String timeBeg;
 
     /**
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")
-    private LocalDateTime timeEnd;
+    private String timeEnd;
 
 }
