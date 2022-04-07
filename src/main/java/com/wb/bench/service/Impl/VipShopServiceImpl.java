@@ -20,6 +20,7 @@ import com.wb.bench.request.VipShopRequest;
 import com.wb.bench.response.VipShopResponse;
 import com.wb.bench.service.VipShopService;
 import com.wb.bench.service.WbQueryLogService;
+import com.wb.bench.util.Base64Util;
 import com.wb.bench.util.HttpClientUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -196,7 +197,7 @@ public class VipShopServiceImpl implements VipShopService {
         System.out.println("唯品维保回调地址返回数据：========" +s);
         //保存结果
         UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
-        wrapper.set("result", replaceDecode);
+        wrapper.set("result",Base64Util.decode(replaceDecode));
         wrapper.eq("order_id", orderId);
         wbQueryLogService.update(wrapper);
         VipShopResponse vipShopResponse = new VipShopResponse();
