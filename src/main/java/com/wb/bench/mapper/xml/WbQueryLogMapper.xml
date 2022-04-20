@@ -17,10 +17,10 @@
             <if test="productName!=null and productName!=''">and product_name = #{productName}</if>
             <if test="productId!=null and productId!=''">and product_id =#{productId}</if>
             <if test="timeBeg !=null and timeBeg !=null">
-                and DATE_FORMAT(create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{timeBeg},'%Y-%m-%d')
+                and create_time &gt;= #{timeBeg}
             </if>
             <if test="timeEnd !=null and timeEnd !=null">
-                and DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{timeEnd},'%Y-%m-%d')
+                and create_time &lt;= #{timeEnd}
             </if>
         </where>
         GROUP BY
@@ -40,10 +40,10 @@
             <if test="productName!=null and productName!=''">and product_name = #{productName}</if>
             <if test="productId!=null and productId!=''">and product_id =#{productId}</if>
             <if test="timeBeg !=null and timeBeg !=null">
-                and DATE_FORMAT(create_time,'%Y-%m-%d') &gt;= DATE_FORMAT(#{timeBeg},'%Y-%m-%d')
+                and create_time &gt;= #{timeBeg}
             </if>
             <if test="timeEnd !=null and timeEnd !=null">
-                and DATE_FORMAT(create_time,'%Y-%m-%d') &lt;= DATE_FORMAT(#{timeEnd},'%Y-%m-%d')
+                and create_time &lt;= #{timeEnd}
             </if>
         </where>
         order by
