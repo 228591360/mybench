@@ -185,6 +185,7 @@ public class VipShopServiceImpl implements VipShopService {
         if(0==code){
             UpdateWrapper<WbQueryLog> wrapper2 = new UpdateWrapper<>();
             wrapper2.set("toll", "是");
+            wrapper2.set("back_time",LocalDateTime.now());
             wrapper2.eq("order_id", orderId);
             wbQueryLogService.update(wrapper2);
             deduction(wbQueryLog.getCustomerId(),productCode.getVipShopWBCode());

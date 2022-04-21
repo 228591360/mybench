@@ -83,6 +83,12 @@ public class WbQueryLog implements Serializable {
     private String result;
 
     /**
+     * 回调时间
+     */
+    @Column(name = "back_time")
+    private LocalDateTime backTime;
+
+    /**
      * 创建时间
      */
     @Column(name = "create_time")

@@ -156,6 +156,7 @@ public class VinServiceImpl implements VinService {
             HttpClientUtil.doPost(callBackUrl, map);
             //保存查询结果
             UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
+            wrapper.set("back_time",LocalDateTime.now());
             wrapper.set("result", s);
             wrapper.eq("order_id", jsonObject.get("orderid").toString());
             wbQueryLogService.update(wrapper);
@@ -181,6 +182,7 @@ public class VinServiceImpl implements VinService {
         if("0".equals(jsonObject.get("code").toString())){
             UpdateWrapper<WbQueryLog> wrapper2 = new UpdateWrapper<>();
             wrapper2.set("toll", "是");
+            wrapper.set("back_time",LocalDateTime.now());
             wrapper2.eq("order_id", jsonObject.get("orderid").toString());
             wbQueryLogService.update(wrapper2);
             deduction(customerId,productCode.getWbCode());
@@ -258,6 +260,7 @@ public class VinServiceImpl implements VinService {
         wbQueryLog.setCustomerName(customerInfo.getCustomerName());
         wbQueryLog.setToll(toll);
         wbQueryLog.setResult(end);
+        wbQueryLog.setBackTime(LocalDateTime.now());
         wbQueryLog.setCreateTime(LocalDateTime.now());
         wbQueryLogMapper.insert(wbQueryLog);
         deduction(customerInfo.getCustomerId(),productCode.getChuXianCode());
@@ -351,6 +354,7 @@ public class VinServiceImpl implements VinService {
         if(charge.equals("true")){
             UpdateWrapper<WbQueryLog> wrapper2 = new UpdateWrapper<>();
             wrapper2.set("toll", "是");
+            wrapper2.set("back_time",LocalDateTime.now());
             wrapper2.eq("order_id", gid);
             wbQueryLogService.update(wrapper2);
             deduction(wbQueryLog.getCustomerId(),productCode.getYiBuChuXianCode());
