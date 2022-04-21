@@ -70,6 +70,12 @@ public class LogResponse implements Serializable  {
     private String result;
 
     /**
+     * 回调时间
+     */
+    @ApiModelProperty(value = "回调时间")
+    private LocalDateTime backTime;
+
+    /**
      * 创建时间
      */
     @ApiModelProperty(value = "创建时间")
