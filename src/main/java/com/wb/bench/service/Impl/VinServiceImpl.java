@@ -176,13 +176,14 @@ public class VinServiceImpl implements VinService {
         //保存查询结果
         UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
         wrapper.set("result", replace);
+        wrapper.set("back_time",LocalDateTime.now());
         wrapper.eq("order_id", jsonObject.get("orderid").toString());
         wbQueryLogService.update(wrapper);
         //查询成功计费
         if("0".equals(jsonObject.get("code").toString())){
             UpdateWrapper<WbQueryLog> wrapper2 = new UpdateWrapper<>();
             wrapper2.set("toll", "是");
-            wrapper.set("back_time",LocalDateTime.now());
+            wrapper2.set("back_time",LocalDateTime.now());
             wrapper2.eq("order_id", jsonObject.get("orderid").toString());
             wbQueryLogService.update(wrapper2);
             deduction(customerId,productCode.getWbCode());
