@@ -199,6 +199,7 @@ public class VipShopServiceImpl implements VipShopService {
         //保存结果
         UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
         wrapper.set("result",Base64Util.decode(replaceDecode));
+        wrapper.set("back_time",LocalDateTime.now());
         wrapper.eq("order_id", orderId);
         wbQueryLogService.update(wrapper);
         VipShopResponse vipShopResponse = new VipShopResponse();
