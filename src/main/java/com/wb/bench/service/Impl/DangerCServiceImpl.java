@@ -175,6 +175,7 @@ public class DangerCServiceImpl implements DangerCService {
         String toll="否";
         if("true".equals(charge)){
             toll="是";
+            deduction(customerInfo.getCustomerId(),productCode.getChuXianCCode());
         }
         WbQueryLog wbQueryLog = new WbQueryLog();
         wbQueryLog.setVin(request.getVin());
