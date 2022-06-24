@@ -29,4 +29,9 @@ public class ProductCode implements Serializable {
      */
     private String vipShopWBCode="8000017dbeebf35460805819fef4288f";
 
+    /**
+     * 出险C
+     */
+    private String chuXianCCode="8000017dbeebf35460805819fef4288e";
+
 }
