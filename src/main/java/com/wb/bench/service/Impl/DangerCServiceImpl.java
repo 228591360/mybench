@@ -220,7 +220,7 @@ public class DangerCServiceImpl implements DangerCService {
         map.put("customerId","e4775b980f5fa7f5f45d291742870cd4");
         Map map1 = new HashMap<String ,String>();
         map1.put("vin",request.getVin());
-        map1.put("callback_url","http://139.196.19.64:8082/queryBackData");
+        map1.put("callbackUrl","http://139.196.19.64:8082/dangerC/queryBackData");
         map1.put("imageUrl",request.getImageUrl());
         map1.put("licenseNo",request.getLicenseNo());
         map.put("encrypt",JSON.toJSONString(map1));
