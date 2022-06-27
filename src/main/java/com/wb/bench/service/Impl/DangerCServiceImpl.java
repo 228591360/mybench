@@ -12,18 +12,23 @@ import com.wb.bench.exception.SbcRuntimeException;
 import com.wb.bench.mapper.CustomerInfoMapper;
 import com.wb.bench.mapper.CustomerServiceMapper;
 import com.wb.bench.mapper.WbQueryLogMapper;
+import com.wb.bench.request.DangerCRequest;
 import com.wb.bench.request.InquireRequest;
+import com.wb.bench.request.OutDangerBackRequest;
 import com.wb.bench.request.PlaceAnOrderRequest;
+import com.wb.bench.response.OutDangerBackResponse;
 import com.wb.bench.service.DangerCService;
 import com.wb.bench.service.WbQueryLogService;
 import com.wb.bench.util.HttpClientUtil;
 import com.wb.bench.util.MD5Util;
+import com.wb.bench.util.UnicodeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -192,85 +197,100 @@ public class DangerCServiceImpl implements DangerCService {
         return JSON.parseObject(end);
     }
 
-
-    public static void main(String[] args) throws Exception {
-//        String mvTrackId ="20170926105632_VehicleInsuranceInfo_zhongpuweixin_sa23jhfu";
-//        Map map = new HashMap<String ,Object>();
-//        map.put("loginName","zhongpuweixin");
-//        map.put("pwd","zhongpuweixin1205");
-//        map.put("serviceName","VehicleInsuranceInfo");
-//        Map map1 = new HashMap<String ,String>();
-//        map1.put("vin","LVSHFFAC8EF840063");
-//        map.put("param",map1);
-//        String jsonString = JSON.toJSONString(map);
-//        System.out.println(jsonString);
-//        String s = HttpClientUtil.doPostJson("https://www.miniscores.net:8313/CreditFunc/v2.1/VehicleInsuranceInfo", jsonString,mvTrackId);
-//        System.out.println(s);
-
-
-//        LinkedHashMap map = new LinkedHashMap();
-//        map.put("callbackUrl","http://139.196.19.64:8082/freceivedata");
-//        map.put("carNumber","null");
-//        map.put("engine","null");
-//        map.put("timeStamp",String.valueOf(System.currentTimeMillis()));
-//        map.put("userId","skHl8OwQONOovA6X");
-//        map.put("userToken","VqFel0WgTEMoPX0LWsP5i86FGq9BKD5j");
-//        map.put("vin","LVSHFFAC8EF840063");
-//        String string = map.toString().replace(", ", "&");
-//        System.out.println(string);
-//        String endString = string.substring(1, string.length() - 1) + "jkdbx3wdkpAeNKE5Ci7Nvr4j4Q3UAJdn";
-//        System.out.println(endString);
-//        String appSign = (MD5Util.md5Hex(endString, "utf-8"));
-//        System.out.println(appSign);
-//        map.put("imageUrl",null);
-//        map.put("djzUrl",null);
-//        map.put("appSign",appSign);
-//        String s = HttpClientUtil.doPost("http://cc2.thinkingleap.com/car-data/api/query/wb", map);
-//        System.out.println(s);
-
-//        LinkedHashMap map = new LinkedHashMap<String ,Object>();
-//        map.put("customerId","e4775b980f5fa7f5f45d291742870cd4");
-//        Map map1 = new HashMap<String ,String>();
-//        map1.put("vin","LVSHFFAC8EF840063");
-//        map.put("encrypt",JSON.toJSONString(map1));
-//        map.put("encryptType","false");
-//        map.put("productCode","BA610011");
-//        map.put("reqTime",String.valueOf(System.currentTimeMillis()));
-//        map.put("version","V001");
-//        String string = map.toString().replace(" ","");
-//        String endString = string.substring(1, string.length() - 1);
-//        System.out.println(endString);
-//        String sign = (MD5Util.md5Hex(endString, "utf-8"));
-//        System.out.println(sign);
-//        map.put("sign",sign);
-//        System.out.println(map);
-//        String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
-//        System.out.println(JSON.parse(end));
-//        JSONObject jsonObject = JSON.parseObject(end);
-//        System.out.println(jsonObject.get("encrypt"));
-//        System.out.println(JSON.parseObject(jsonObject.get("encrypt").toString()).get("charge"));
-
+    @Override
+    public JSONObject query(DangerCRequest request) {
+        QueryWrapper<CustomerInfo> customerInfoQueryWrapper = new QueryWrapper<>();
+        customerInfoQueryWrapper.eq("customer_account",request.getCustomerAccount());
+        customerInfoQueryWrapper.eq("customer_password",request.getCustomerPassword());
+        CustomerInfo customerInfo = customerInfoMapper.selectOne(customerInfoQueryWrapper);
+        if(Objects.isNull(customerInfo)){
+            throw new SbcRuntimeException(1004,"用户未注册");
+        }
+        if(customerInfo.getBalanceAmount().compareTo(BigDecimal.ZERO)<0){
+            throw new SbcRuntimeException(1005,"余额不足,请充值!");
+        }
+        QueryWrapper<CustomerProduct> customerProductQueryWrapper = new QueryWrapper<>();
+        customerProductQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
+        customerProductQueryWrapper.eq("product_id",productCode.getChuXianCCode());
+        CustomerProduct customerProduct = customerServiceMapper.selectOne(customerProductQueryWrapper);
+        if(Objects.isNull(customerProduct)){
+            throw new SbcRuntimeException(1006,"无权限调用服务");
+        }
         LinkedHashMap map = new LinkedHashMap<String ,Object>();
         map.put("customerId","e4775b980f5fa7f5f45d291742870cd4");
         Map map1 = new HashMap<String ,String>();
-        map1.put("vin","LVSHFFAC8EF840063");
-        map1.put("callback_url","http://139.196.19.64:8088/outDangerBackData");
-        map1.put("engine_number","");
-        map1.put("license_no","");
-        map1.put("id_number","");
-        map1.put("province","");
+        map1.put("vin",request.getVin());
+        map1.put("callback_url","http://139.196.19.64:8082/queryBackData");
+        map1.put("imageUrl",request.getImageUrl());
+        map1.put("licenseNo",request.getLicenseNo());
         map.put("encrypt",JSON.toJSONString(map1));
         map.put("encryptType","false");
-        map.put("productCode","BA610010");
+        map.put("productCode","BA610015");
         map.put("reqTime",String.valueOf(System.currentTimeMillis()));
-        map.put("version","V002");
+        map.put("version","V001");
         String string = map.toString().replace(" ","");
         String endString = string.substring(1, string.length() - 1);
         String sign = (MD5Util.md5Hex(endString, "utf-8"));
         map.put("sign",sign);
-        System.out.println(map);
         String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
-        log.info("异步出险查询结果===={}",end);
-        System.out.println(JSONObject.parseObject(JSONObject.parseObject(end).get("encrypt").toString()).get("gid"));
+        log.info("出险信息详版下单结果===={}",end);
+
+        JSONObject resultObject = JSONObject.parseObject(end);
+        String orderId = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("gid").toString();
+        String charge = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("charge").toString();
+        WbQueryLog wbQueryLog = new WbQueryLog();
+        wbQueryLog.setVin(request.getVin());
+        wbQueryLog.setProductId(customerProduct.getProductId());
+        wbQueryLog.setProductName("出险信息详版");
+        wbQueryLog.setOrderId(orderId);
+        wbQueryLog.setCallBackUrl(request.getCallbackUrl());
+        wbQueryLog.setCustomerId(customerInfo.getCustomerId());
+        wbQueryLog.setCustomerName(customerInfo.getCustomerName());
+        wbQueryLog.setToll(charge.equals("false")?"否":"是");
+        wbQueryLog.setCreateTime(LocalDateTime.now());
+        wbQueryLogMapper.insert(wbQueryLog);
+        return resultObject;
     }
+
+    @Override
+    public OutDangerBackResponse queryBackData(OutDangerBackRequest request) {
+        HashMap<String, Object> stringObjectHashMap = new HashMap<>();
+        stringObjectHashMap.put("sign",request.getSign());
+        stringObjectHashMap.put("encryptType",request.getEncryptType());
+        String replace = UnicodeUtil.unicodeToString(JSON.toJSONString(request.getEncrypt())).replace("\\", "");
+        String substring = replace.substring(1, replace.length() - 1);
+        String gid = JSONObject.parseObject(substring).get("gid").toString();
+        String charge = JSONObject.parseObject(substring).get("charge").toString();
+        stringObjectHashMap.put("encrypt",substring);
+        String json = JSON.toJSONString(stringObjectHashMap);
+        QueryWrapper<WbQueryLog> wbQueryLogQueryWrapper = new QueryWrapper<>();
+        wbQueryLogQueryWrapper.eq("order_id",gid);
+        WbQueryLog wbQueryLog = wbQueryLogMapper.selectOne(wbQueryLogQueryWrapper);
+        String callBackUrl = wbQueryLog.getCallBackUrl();
+        byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
+        String replaceDecode = java.util.Base64.getEncoder().encodeToString(bytes);
+        Map map = new HashMap<String ,Object>();
+        map.put("data",replaceDecode);
+        String s = HttpClientUtil.doPost(callBackUrl, map);
+        System.out.println("出险信息详版回调返回数据：========" +s);
+        //保存结果
+        UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
+        wrapper.set("result", json);
+        wrapper.set("back_time",LocalDateTime.now());
+        wrapper.eq("order_id", gid);
+        wbQueryLogService.update(wrapper);
+        //查询成功扣费
+        if(charge.equals("true")){
+            UpdateWrapper<WbQueryLog> wrapper2 = new UpdateWrapper<>();
+            wrapper2.set("toll", "是");
+            wrapper2.set("back_time",LocalDateTime.now());
+            wrapper2.eq("order_id", gid);
+            wbQueryLogService.update(wrapper2);
+            deduction(wbQueryLog.getCustomerId(),productCode.getChuXianCCode());
+        }
+        OutDangerBackResponse outDangerBackResponse = new OutDangerBackResponse();
+        outDangerBackResponse.setCode(Integer.valueOf(JSONObject.parseObject(s).get("code").toString()));
+        return outDangerBackResponse;
+    }
+
 }
