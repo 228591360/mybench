@@ -28,7 +28,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -267,10 +266,10 @@ public class DangerCServiceImpl implements DangerCService {
         wbQueryLogQueryWrapper.eq("order_id",gid);
         WbQueryLog wbQueryLog = wbQueryLogMapper.selectOne(wbQueryLogQueryWrapper);
         String callBackUrl = wbQueryLog.getCallBackUrl();
-        byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
-        String replaceDecode = java.util.Base64.getEncoder().encodeToString(bytes);
+//        byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
+//        String replaceDecode = java.util.Base64.getEncoder().encodeToString(bytes);
         Map map = new HashMap<String ,Object>();
-        map.put("data",replaceDecode);
+        map.put("data",json);
         String s = HttpClientUtil.doPost(callBackUrl, map);
         System.out.println("出险信息详版回调返回数据：========" +s);
         //保存结果
