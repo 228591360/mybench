@@ -7,9 +7,7 @@ import java.io.Serializable;
 @Data
 public class OutDangerBackRequest implements Serializable {
 
-
     private String encrypt;
-
 
     private String encryptType;
 
