@@ -296,6 +296,7 @@ public class VinServiceImpl implements VinService {
         map1.put("license_no",request.getLicenseNo());
         map1.put("id_number",request.getIdNumber());
         map1.put("province",request.getProvince());
+        map1.put("image_url",request.getImageUrl());
         map.put("encrypt",JSON.toJSONString(map1));
         map.put("encryptType","false");
         map.put("productCode","BA610010");

@@ -64,4 +64,11 @@ public class OutDangerRequest implements Serializable {
     private String province;
 
 
+    /**
+     * 行驶证照片地址
+     */
+    @ApiModelProperty(value = "行驶证照片地址")
+    private String imageUrl;
+
+
 }
