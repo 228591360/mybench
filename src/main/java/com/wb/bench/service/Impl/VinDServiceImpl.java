@@ -68,7 +68,7 @@ public class VinDServiceImpl implements VinDService {
         }
         QueryWrapper<CustomerProduct> customerProductQueryWrapper = new QueryWrapper<>();
         customerProductQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
-        customerProductQueryWrapper.eq("product_id",productCode.getVipShopWBCode());
+        customerProductQueryWrapper.eq("product_id",productCode.getQXWBCode());
         CustomerProduct customerProduct = customerServiceMapper.selectOne(customerProductQueryWrapper);
         if(Objects.isNull(customerProduct)){
             throw new SbcRuntimeException(1006,"无权限调用服务");

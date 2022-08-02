@@ -46,6 +46,36 @@ public class WbQueryLog implements Serializable {
     private String vin;
 
     /**
+     * 发动机号
+     */
+    @Column(name = "engine_no")
+    private String engineNo;
+
+    /**
+     * 车牌号
+     */
+    @Column(name = "license_no")
+    private String licenseNo;
+
+    /**
+     * 行驶证照片
+     */
+    @Column(name = "license_url")
+    private String licenseUrl;
+
+    /**
+     * 车辆登记证照片
+     */
+    @Column(name = "registration_url")
+    private String registrationUrl;
+
+    /**
+     * 01: 大车 02: 小车 15: 挂车 51: 新能源大车 52: 新能源小车
+     */
+    @Column(name = "car_type")
+    private String carType;
+
+    /**
      * 订单ID
      */
     @Column(name = "order_id")

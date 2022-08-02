@@ -34,4 +34,10 @@ public class ProductCode implements Serializable {
      */
     private String chuXianCCode="8000017dbeebf35460805819fef4288e";
 
+
+    /**
+     * 圈讯维保
+     */
+    private String QXWBCode="8000017dbeebf35460805819fef4288j";
+
 }
