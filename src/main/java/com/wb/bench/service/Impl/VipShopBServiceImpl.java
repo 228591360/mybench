@@ -169,6 +169,15 @@ public class VipShopBServiceImpl implements VipShopBService {
         String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
 
         JSONObject resultObject = JSONObject.parseObject(end);
+        System.out.println("圈讯维保返回结果：======{}"+resultObject);
+        String code = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("code").toString();
+        if(!"300018".equals(code)){
+            VipShopBRequest vipShopBRequest = BeanUtil.copyProperties(request, VipShopBRequest.class);
+            vipShopBRequest.setCallbackUrl(request.getCallbackUrl());
+            vipShopBRequest.setCustomerId(customerInfo.getCustomerId());
+            vipShopBRequest.setCustomerName(customerInfo.getCustomerName());
+            return weiBao(vipShopBRequest);
+        }
         String orderId = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("gid").toString();
         String charge = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("charge").toString();
         String reqTime = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("reqTime").toString();
@@ -180,7 +189,7 @@ public class VipShopBServiceImpl implements VipShopBService {
         wbQueryLog.setRegistrationUrl(request.getRegistrationUrl());
         wbQueryLog.setCarType(request.getCarType());
         wbQueryLog.setProductId(customerProduct.getProductId());
-        wbQueryLog.setProductName("车辆维修保养记录D-2");
+        wbQueryLog.setProductName("圈讯维保");
         wbQueryLog.setOrderId(orderId);
         wbQueryLog.setCallBackUrl(request.getCallbackUrl());
         wbQueryLog.setCustomerId(customerInfo.getCustomerId());
@@ -225,13 +234,12 @@ public class VipShopBServiceImpl implements VipShopBService {
             vipShopBCallbackRequest.setCode(0);
             vipShopBCallbackRequest.setMsg("success");
             vipShopBCallbackRequest.setData(data);
-            System.out.println(JSON.toJSONString(vipShopBCallbackRequest));
             byte[] bytes = JSON.toJSONString(vipShopBCallbackRequest).getBytes(StandardCharsets.UTF_8);
             String replaceDecode = java.util.Base64.getEncoder().encodeToString(bytes);
             Map map = new HashMap<String ,Object>();
             map.put("data",replaceDecode);
             String s = HttpClientUtil.doPost(callBackUrl, map);
-            System.out.println("维保D：========" +s);
+            System.out.println("圈讯维保：========" +s);
             //保存结果
             UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
             wrapper.set("result", json);
@@ -257,7 +265,7 @@ public class VipShopBServiceImpl implements VipShopBService {
     public String weiBao(VipShopBRequest request) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("vin", request.getVin());
-        jsonObject.put("callbackUrl", "http://139.196.19.64/api/weibao/callback");
+        jsonObject.put("callbackUrl", "http://139.196.19.64:8082/v2/callback");
         jsonObject.put("licenseNo", request.getLicenseNo());
         jsonObject.put("licenseUrl", request.getLicenseUrl());
         jsonObject.put("registrationUrl", request.getRegistrationUrl());

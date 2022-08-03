@@ -31,7 +31,7 @@ public class VipShopBController {
      * @param vipShopRequest
      * @return
      */
-    @PostMapping("v2/order/weibao")
+    @PostMapping("/order/weibao")
     @ApiOperation("唯品维保查询")
     public String queryVinInfo(@RequestBody @Validated VipShopRequest vipShopRequest){
         log.info("唯品维保查询入口================={}",vipShopRequest.getVin());
@@ -40,12 +40,12 @@ public class VipShopBController {
 
 
     /**
-     * 唯品维保B
+     * 圈讯维保
      */
     @PostMapping("v2/wb/callback")
-    @ApiOperation("车辆维修保养记录 D 回调")
+    @ApiOperation("圈讯维保 回调")
     public OutDangerBackResponse callback(@RequestBody @Validated OutDangerBackRequest request){
-        log.info("车辆维修保养记录 D 回调=================");
+        log.info("圈讯维保 回调=================");
         OutDangerBackResponse outDangerBackResponse = new OutDangerBackResponse();
         if(Objects.isNull(request)){
             outDangerBackResponse.setCode(-1);
