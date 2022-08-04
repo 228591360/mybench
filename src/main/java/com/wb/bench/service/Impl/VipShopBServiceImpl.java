@@ -229,7 +229,9 @@ public class VipShopBServiceImpl implements VipShopBService {
             vipShopBRequest.setCallbackUrl(wbQueryLog.getCallBackUrl());
             weiBao(vipShopBRequest);
         }else {
-            Object data = JSONObject.parseObject(substring).get("data");
+            JSONObject data = JSONObject.parseObject(substring).getJSONObject("data");
+            data.put("orderId",gid);
+            data.remove("report");
             VipShopBCallbackRequest vipShopBCallbackRequest = new VipShopBCallbackRequest();
             vipShopBCallbackRequest.setCode(0);
             vipShopBCallbackRequest.setMsg("success");
