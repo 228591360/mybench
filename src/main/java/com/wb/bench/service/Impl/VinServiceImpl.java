@@ -245,8 +245,10 @@ public class VinServiceImpl implements VinService {
         map.put("sign",sign);
         String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
         log.info("出险查询结果===={}",end);
-        JSONObject jsonObject = JSON.parseObject(end);
-        String charge = JSON.parseObject(jsonObject.get("encrypt").toString()).get("charge").toString();
+        JSONObject encrypt = JSON.parseObject(end).getJSONObject("encrypt");
+        encrypt.put("productCode","danger");
+        encrypt.put("version","WAGU001");
+        String charge = encrypt.get("charge").toString();
         String toll ="否";
         if("true".equals(charge)){
             toll="是";
@@ -265,7 +267,7 @@ public class VinServiceImpl implements VinService {
         wbQueryLog.setCreateTime(LocalDateTime.now());
         wbQueryLogMapper.insert(wbQueryLog);
         deduction(customerInfo.getCustomerId(),productCode.getChuXianCode());
-        return end;
+        return encrypt.toJSONString();
     }
 
     @Override
@@ -310,8 +312,11 @@ public class VinServiceImpl implements VinService {
         log.info("异步出险查询结果===={}",end);
 
         JSONObject resultObject = JSONObject.parseObject(end);
-        String orderId = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("gid").toString();
-        String charge = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("charge").toString();
+        JSONObject encrypt = resultObject.getJSONObject("encrypt");
+        encrypt.put("productCode","asynchronous");
+        encrypt.put("version","WAGU001");
+        String orderId = encrypt.get("gid").toString();
+        String charge = encrypt.get("charge").toString();
         WbQueryLog wbQueryLog = new WbQueryLog();
         wbQueryLog.setVin(request.getVin());
         wbQueryLog.setProductId(customerProduct.getProductId());
@@ -333,9 +338,12 @@ public class VinServiceImpl implements VinService {
         stringObjectHashMap.put("encryptType",request.getEncryptType());
         String replace = UnicodeUtil.unicodeToString(JSON.toJSONString(request.getEncrypt())).replace("\\", "");
         String substring = replace.substring(1, replace.length() - 1);
-        String gid = JSONObject.parseObject(substring).get("gid").toString();
-        String charge = JSONObject.parseObject(substring).get("charge").toString();
-        stringObjectHashMap.put("encrypt",substring);
+        JSONObject jsonObject = JSONObject.parseObject(substring);
+        jsonObject.put("productCode","asynchronous");
+        jsonObject.put("version","WAGU001");
+        String gid = jsonObject.get("gid").toString();
+        String charge = jsonObject.get("charge").toString();
+        stringObjectHashMap.put("encrypt",jsonObject.toJSONString());
         String json = JSON.toJSONString(stringObjectHashMap);
         QueryWrapper<WbQueryLog> wbQueryLogQueryWrapper = new QueryWrapper<>();
         wbQueryLogQueryWrapper.eq("order_id",gid);

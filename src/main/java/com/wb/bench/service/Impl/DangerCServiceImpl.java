@@ -235,8 +235,11 @@ public class DangerCServiceImpl implements DangerCService {
         log.info("出险信息详版下单结果===={}",end);
 
         JSONObject resultObject = JSONObject.parseObject(end);
-        String orderId = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("gid").toString();
-        String charge = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("charge").toString();
+        JSONObject encrypt = resultObject.getJSONObject("encrypt");
+        encrypt.put("productCode","accurate");
+        encrypt.put("version","WAGU001");
+        String orderId = encrypt.get("gid").toString();
+        String charge = encrypt.get("charge").toString();
         WbQueryLog wbQueryLog = new WbQueryLog();
         wbQueryLog.setVin(request.getVin());
         wbQueryLog.setProductId(customerProduct.getProductId());
@@ -258,8 +261,11 @@ public class DangerCServiceImpl implements DangerCService {
         stringObjectHashMap.put("encryptType",request.getEncryptType());
         String replace = UnicodeUtil.unicodeToString(JSON.toJSONString(request.getEncrypt())).replace("\\", "");
         String substring = replace.substring(1, replace.length() - 1);
-        String gid = JSONObject.parseObject(substring).get("gid").toString();
-        String charge = JSONObject.parseObject(substring).get("charge").toString();
+        JSONObject jsonObject = JSONObject.parseObject(substring);
+        jsonObject.put("productCode","accurate");
+        jsonObject.put("version","WAGU001");
+        String gid = jsonObject.get("gid").toString();
+        String charge = jsonObject.get("charge").toString();
         stringObjectHashMap.put("encrypt",substring);
         String json = JSON.toJSONString(stringObjectHashMap);
         QueryWrapper<WbQueryLog> wbQueryLogQueryWrapper = new QueryWrapper<>();

@@ -298,6 +298,11 @@ public class VipShopBServiceImpl implements VipShopBService {
         wbQueryLog.setProductId(productCode.getVipShopWBCode());
         wbQueryLog.setProductName("唯品维保");
         wbQueryLog.setOrderId(orderId);
+        wbQueryLog.setLicenseNo(request.getLicenseNo());
+        wbQueryLog.setEngineNo(request.getEngineNo());
+        wbQueryLog.setLicenseUrl(request.getLicenseUrl());
+        wbQueryLog.setRegistrationUrl(request.getRegistrationUrl());
+        wbQueryLog.setCarType(request.getCarType());
         wbQueryLog.setCallBackUrl(request.getCallbackUrl());
         wbQueryLog.setCustomerId(request.getCustomerId());
         wbQueryLog.setCustomerName(request.getCustomerName());
