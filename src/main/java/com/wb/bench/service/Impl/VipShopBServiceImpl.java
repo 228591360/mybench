@@ -227,7 +227,14 @@ public class VipShopBServiceImpl implements VipShopBService {
         if(!code.equals("0")){
             VipShopBRequest vipShopBRequest = BeanUtil.copyProperties(wbQueryLog, VipShopBRequest.class);
             vipShopBRequest.setCallbackUrl(wbQueryLog.getCallBackUrl());
+            vipShopBRequest.setOrderId(gid);
             weiBao(vipShopBRequest);
+            //保存结果
+            UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
+            wrapper.set("result", json);
+            wrapper.set("back_time",LocalDateTime.now());
+            wrapper.eq("order_id", gid);
+            wbQueryLogService.update(wrapper);
         }else {
             JSONObject data = JSONObject.parseObject(substring).getJSONObject("data");
             data.put("orderId",gid);
@@ -295,6 +302,7 @@ public class VipShopBServiceImpl implements VipShopBService {
         wbQueryLog.setCustomerId(request.getCustomerId());
         wbQueryLog.setCustomerName(request.getCustomerName());
         wbQueryLog.setToll("否");
+        wbQueryLog.setRemark(request.getOrderId());
         wbQueryLog.setCreateTime(LocalDateTime.now());
         wbQueryLogMapper.insert(wbQueryLog);
         return result;
@@ -315,6 +323,9 @@ public class VipShopBServiceImpl implements VipShopBService {
             wrapper2.eq("order_id", orderId);
             wbQueryLogService.update(wrapper2);
             deduction(wbQueryLog.getCustomerId(),productCode.getVipShopWBCode());
+        }
+        if(!Objects.isNull(wbQueryLog.getRemark())){
+            vipShopCallbackRequest.getData().setOrderId(wbQueryLog.getRemark());
         }
         byte[] bytes = JSON.toJSONString(vipShopCallbackRequest).getBytes(StandardCharsets.UTF_8);
         String replaceDecode = java.util.Base64.getEncoder().encodeToString(bytes);

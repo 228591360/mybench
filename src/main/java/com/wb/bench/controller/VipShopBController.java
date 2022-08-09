@@ -1,5 +1,6 @@
 package com.wb.bench.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.wb.bench.request.OutDangerBackRequest;
 import com.wb.bench.request.VipShopCallbackRequest;
 import com.wb.bench.request.VipShopRequest;
@@ -45,7 +46,7 @@ public class VipShopBController {
     @PostMapping("v2/wb/callback")
     @ApiOperation("圈讯维保 回调")
     public OutDangerBackResponse callback(@RequestBody @Validated OutDangerBackRequest request){
-        log.info("圈讯维保 回调=================");
+        log.info("圈讯维保 回调================={}"+ JSON.toJSONString(request));
         OutDangerBackResponse outDangerBackResponse = new OutDangerBackResponse();
         if(Objects.isNull(request)){
             outDangerBackResponse.setCode(-1);
@@ -62,7 +63,7 @@ public class VipShopBController {
     @PostMapping("/v2/callback")
     @ApiOperation("唯品维保回调")
     public VipShopResponse callbackData(@RequestBody @Validated VipShopCallbackRequest vipShopCallbackRequest){
-        log.info("唯品维保回调=================");
+        log.info("唯品维保回调================="+ JSON.toJSONString(vipShopCallbackRequest));
         VipShopResponse vipShopResponse = new VipShopResponse();
         if(Objects.isNull(vipShopCallbackRequest)){
             vipShopResponse.setCode(-1);

@@ -112,6 +112,13 @@ public class WbQueryLog implements Serializable {
     @Column(name = "result")
     private String result;
 
+
+    /**
+     * 备注
+     */
+    @Column(name = "remark")
+    private String remark;
+
     /**
      * 回调时间
      */

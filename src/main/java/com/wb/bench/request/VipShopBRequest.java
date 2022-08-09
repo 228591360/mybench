@@ -60,4 +60,7 @@ public class VipShopBRequest implements Serializable {
 
     private String customerName;
 
+    private String orderId;
+
+
 }
