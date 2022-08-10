@@ -1,8 +1,7 @@
 package com.wb.bench.service.Impl;
 
-import cn.hutool.core.codec.Base64;
-import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.http.HttpRequest;
+import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
@@ -15,24 +14,24 @@ import com.wb.bench.mapper.CustomerInfoMapper;
 import com.wb.bench.mapper.CustomerServiceMapper;
 import com.wb.bench.mapper.WbQueryLogMapper;
 import com.wb.bench.request.ShopBatch;
+import com.wb.bench.request.VipShopBRequest;
 import com.wb.bench.request.VipShopBatchRequest;
+import com.wb.bench.service.VipShopBService;
 import com.wb.bench.service.VipShopBatchService;
 import com.wb.bench.service.WbQueryLogService;
+import com.wb.bench.util.HttpClientUtil;
+import com.wb.bench.util.MD5Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Service
 @Slf4j
 public class VipShopBatchServiceImpl implements VipShopBatchService {
-    //这里只是示例，分布式环境下可存在redis，mysql等环境中去，根据实际情况处理
-    private static long expiresIn = 1636135141263L;
-    private static String accessToken = "";
 
     @Autowired
     private CustomerInfoMapper customerInfoMapper;
@@ -49,61 +48,9 @@ public class VipShopBatchServiceImpl implements VipShopBatchService {
     @Autowired
     private ProductCode productCode;
 
+    @Autowired
+    private VipShopBService vipShopBService;
 
-    /**
-     * 获取token 可以防止重复生成token
-     * @return
-     */
-    public String getAuht() {
-        //一定时间内不过期就不重新拿了，使用缓存
-        if (System.currentTimeMillis() + 100000 >= expiresIn) {
-            String result = HttpRequest.post("http://47.92.93.251/vpc/gateway/auth-center/authorize/client?grant_type=client_credentials")
-                    .header("Accept", "*/*")
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .header("Authorization", "basic " + getGenericBasicAuth())
-                    .execute().body();
-            System.out.println(result);
-            JSONObject resultJson = JSONObject.parseObject(result);
-            expiresIn = resultJson.getJSONObject("data").getLongValue("expires_in");
-            accessToken = resultJson.getJSONObject("data").getString("access_token");
-            return accessToken;
-        }
-        return accessToken;
-    }
-
-    public String getGenericBasicAuth(){
-        return getbasicString("4a43332f9345460ea15fe5c3e3c96254", "7d68954e55ea4a4b85c4f9f102ecbdc5");
-    }
-    public String getbasicString(String id, String secret) {
-        String data = id.concat(":").concat(secret);
-        return Base64.encode(data, CharsetUtil.CHARSET_UTF_8);
-    }
-
-    public void createOrder(){
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("vin", "vin");
-        jsonObject.put("licenseUrl", "");
-        jsonObject.put("licenseUrl", "");
-        jsonObject.put("licenseUrl", "");
-        jsonObject.put("licenseUrl", "");
-        jsonObject.put("licenseUrl", "");
-        //.. 其他参数
-        try {
-            Thread.sleep(1000);
-        } catch (Exception ex) {
-
-        }
-        jsonObject.put("callbackUrl", "回调地址");
-        //下单地址
-        String result = HttpRequest.post("http://47.92.93.251/vpc/gateway/data-center/order/weibao")
-                .body(jsonObject.toJSONString())
-                .header("Accept", "*/*")
-                .header("Content-Type", "application/json")
-                .header("Authorization", getAuht())
-                .execute().body();
-        //打印结果，下单结果
-        System.out.println(result);
-    }
 
     @Override
     public String weiBao(VipShopBatchRequest vipShopBatchRequest) {
@@ -126,37 +73,56 @@ public class VipShopBatchServiceImpl implements VipShopBatchService {
         }
         List<ShopBatch> shop = vipShopBatchRequest.getShop();
         if(CollectionUtils.isNotEmpty(shop)){
-            for (ShopBatch shopBatch : shop) {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.put("vin", shopBatch.getVin());
-                jsonObject.put("callbackUrl", "http://139.196.19.64/api/weibao/callback");
-                jsonObject.put("licenseNo", shopBatch.getLicenseNo());
-                jsonObject.put("licenseUrl", shopBatch.getLicenseUrl());
-                jsonObject.put("registrationUrl", shopBatch.getRegistrationUrl());
-                jsonObject.put("engineNo", shopBatch.getEngineNo());
-                jsonObject.put("carType", shopBatch.getCarType());
+            for (ShopBatch request : shop) {
+                LinkedHashMap map = new LinkedHashMap<String ,Object>();
+                map.put("customerId","e4775b980f5fa7f5f45d291742870cd4");
+                Map map1 = new HashMap<String ,String>();
+                map1.put("vin",request.getVin());
+                map1.put("callback_url","http://139.196.19.64:8082/v2/wb/callback");
+                map1.put("licensePlate",request.getLicenseNo());
+                map1.put("engine",request.getEngineNo());
+                map1.put("imageUrl",request.getLicenseUrl());
+                map1.put("regUrl",request.getRegistrationUrl());
+                map1.put("carType",request.getCarType());
+                map.put("encrypt", JSON.toJSONString(map1));
+                map.put("encryptType","false");
+                map.put("productCode","BA610033");
+                map.put("reqTime",String.valueOf(System.currentTimeMillis()));
+                map.put("version","V001");
+                String string = map.toString().replace(" ","");
+                String endString = string.substring(1, string.length() - 1);
+                String sign = (MD5Util.md5Hex(endString, "utf-8"));
+                map.put("sign",sign);
+                String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
 
-                //下单地址
-                String result = HttpRequest.post("http://47.92.93.251/vpc/gateway/data-center/order/weibao")
-                        .body(jsonObject.toJSONString())
-                        .header("Accept", "*/*")
-                        .header("Content-Type", "application/json")
-                        .header("Authorization", getAuht())
-                        .execute().body();
-                //打印结果，下单结果
-                System.out.println(result);
-
-                JSONObject resultObject = JSONObject.parseObject(result);
-                String orderId = JSONObject.parseObject(resultObject.get("data").toString()).get("orderId").toString();
+                JSONObject resultObject = JSONObject.parseObject(end);
+                System.out.println("圈讯维保返回结果：======{}"+resultObject);
+                String code = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("code").toString();
+                if(!"300018".equals(code)){
+                    VipShopBRequest vipShopBRequest = BeanUtil.copyProperties(request, VipShopBRequest.class);
+                    vipShopBRequest.setCallbackUrl(vipShopBatchRequest.getCallbackUrl());
+                    vipShopBRequest.setCustomerId(customerInfo.getCustomerId());
+                    vipShopBRequest.setCustomerName(customerInfo.getCustomerName());
+                    vipShopBService.weiBao(vipShopBRequest);
+                    continue;
+                }
+                String orderId = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("gid").toString();
+                String charge = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("charge").toString();
+                String reqTime = JSONObject.parseObject(resultObject.get("encrypt").toString()).get("reqTime").toString();
                 WbQueryLog wbQueryLog = new WbQueryLog();
-                wbQueryLog.setVin(shopBatch.getVin());
+                wbQueryLog.setVin(request.getVin());
+                wbQueryLog.setLicenseNo(request.getLicenseNo());
+                wbQueryLog.setEngineNo(request.getEngineNo());
+                wbQueryLog.setLicenseUrl(request.getLicenseUrl());
+                wbQueryLog.setRegistrationUrl(request.getRegistrationUrl());
+                wbQueryLog.setCarType(request.getCarType());
                 wbQueryLog.setProductId(customerProduct.getProductId());
-                wbQueryLog.setProductName("唯品维保");
+                wbQueryLog.setProductName("圈讯维保");
                 wbQueryLog.setOrderId(orderId);
                 wbQueryLog.setCallBackUrl(vipShopBatchRequest.getCallbackUrl());
                 wbQueryLog.setCustomerId(customerInfo.getCustomerId());
                 wbQueryLog.setCustomerName(customerInfo.getCustomerName());
-                wbQueryLog.setToll("否");
+                wbQueryLog.setToll(charge.equals("false")?"否":"是");
                 wbQueryLog.setCreateTime(LocalDateTime.now());
                 wbQueryLogMapper.insert(wbQueryLog);
             }
