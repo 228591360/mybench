@@ -215,9 +215,10 @@ public class VipShopBServiceImpl implements VipShopBService {
         stringObjectHashMap.put("encryptType",request.getEncryptType());
         String replace = UnicodeUtil.unicodeToString(JSON.toJSONString(request.getEncrypt())).replace("\\", "");
         String substring = replace.substring(1, replace.length() - 1);
-        String gid = JSONObject.parseObject(substring).get("gid").toString();
-        String charge = JSONObject.parseObject(substring).get("charge").toString();
-        String code = JSONObject.parseObject(substring).get("code").toString();
+        JSONObject jsonObject = JSONObject.parseObject(substring);
+        String gid = jsonObject.get("gid").toString();
+        String charge = jsonObject.get("charge").toString();
+        String code = jsonObject.get("code").toString();
         stringObjectHashMap.put("encrypt",substring);
         String json = JSON.toJSONString(stringObjectHashMap);
         QueryWrapper<WbQueryLog> wbQueryLogQueryWrapper = new QueryWrapper<>();
