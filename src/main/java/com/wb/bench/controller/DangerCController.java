@@ -2,9 +2,7 @@ package com.wb.bench.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wb.bench.request.DangerCRequest;
-import com.wb.bench.request.InquireRequest;
 import com.wb.bench.request.OutDangerBackRequest;
-import com.wb.bench.request.PlaceAnOrderRequest;
 import com.wb.bench.response.OutDangerBackResponse;
 import com.wb.bench.service.DangerCService;
 import com.wb.bench.service.VinService;
@@ -31,28 +29,6 @@ public class DangerCController {
     @Resource
     private DangerCService dangerCService;
 
-
-
-    /**
-     * 下单
-     */
-    @ApiOperation("下单")
-    @PostMapping("/placeAnOrder")
-    public JSONObject placeAnOrder(@RequestBody @Validated PlaceAnOrderRequest request){
-        return dangerCService.placeAnOrder(request);
-    }
-
-
-
-    /**
-     * 查询
-     */
-    @PostMapping("/inquire")
-    @ApiOperation("查询")
-    public JSONObject inquire(@RequestBody @Validated InquireRequest request){
-
-        return dangerCService.inquire(request);
-    }
 
     /**
      * 出险信息详版

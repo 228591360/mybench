@@ -245,9 +245,11 @@ public class VinServiceImpl implements VinService {
         map.put("sign",sign);
         String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
         log.info("出险查询结果===={}",end);
-        JSONObject encrypt = JSON.parseObject(end).getJSONObject("encrypt");
+        JSONObject jsonObject = JSON.parseObject(end);
+        JSONObject encrypt = jsonObject.getJSONObject("encrypt");
         encrypt.put("productCode","danger");
         encrypt.put("version","WAGU001");
+        jsonObject.put("encrypt",encrypt);
         String charge = encrypt.get("charge").toString();
         String toll ="否";
         if("true".equals(charge)){
@@ -267,7 +269,7 @@ public class VinServiceImpl implements VinService {
         wbQueryLog.setCreateTime(LocalDateTime.now());
         wbQueryLogMapper.insert(wbQueryLog);
         deduction(customerInfo.getCustomerId(),productCode.getChuXianCode());
-        return encrypt.toJSONString();
+        return jsonObject.toJSONString();
     }
 
     @Override
@@ -406,6 +408,31 @@ public class VinServiceImpl implements VinService {
         }
         return basePage;
     }
+
+    /**
+     * 去掉json字符串中多余的引号
+     * @param s json字符串
+     * @return
+     */
+    public static String jsonStrRemoveExtraQuotationMarks(String s) {
+        char[] tempArr = s.replaceAll("[\\s*\t\n\r]", "").toCharArray();
+        int tempLength = tempArr.length;
+        for (int i = 0; i < tempLength; i++) {
+            if (tempArr[i] == ':' && tempArr[i + 1] == '"') {
+                for (int j = i + 2; j < tempLength; j++) {
+                    if (tempArr[j] == '"') {
+                        if (tempArr[j + 1] != ',' && tempArr[j + 1] != '}') {
+                            tempArr[j] = ' ';
+                        } else if (tempArr[j + 1] == ',' || tempArr[j + 1] == '}') {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return new String(tempArr).replaceAll("[\\s*\t\n\r]", "");
+    }
+
 
     public static void main(String[] args) throws Exception {
 //        String mvTrackId ="20170926105632_VehicleInsuranceInfo_zhongpuweixin_sa23jhfu";

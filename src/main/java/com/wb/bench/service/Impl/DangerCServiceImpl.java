@@ -13,9 +13,7 @@ import com.wb.bench.mapper.CustomerInfoMapper;
 import com.wb.bench.mapper.CustomerServiceMapper;
 import com.wb.bench.mapper.WbQueryLogMapper;
 import com.wb.bench.request.DangerCRequest;
-import com.wb.bench.request.InquireRequest;
 import com.wb.bench.request.OutDangerBackRequest;
-import com.wb.bench.request.PlaceAnOrderRequest;
 import com.wb.bench.response.OutDangerBackResponse;
 import com.wb.bench.service.DangerCService;
 import com.wb.bench.service.WbQueryLogService;
@@ -75,126 +73,6 @@ public class DangerCServiceImpl implements DangerCService {
     }
 
 
-    @Override
-    public JSONObject inquire(InquireRequest request) {
-        QueryWrapper<CustomerInfo> customerInfoQueryWrapper = new QueryWrapper<>();
-        customerInfoQueryWrapper.eq("customer_account",request.getCustomerAccount());
-        customerInfoQueryWrapper.eq("customer_password",request.getCustomerPassword());
-        CustomerInfo customerInfo = customerInfoMapper.selectOne(customerInfoQueryWrapper);
-        if(Objects.isNull(customerInfo)){
-            throw new SbcRuntimeException(1004,"用户未注册");
-        }
-        if(customerInfo.getBalanceAmount().compareTo(BigDecimal.ZERO)<0){
-            throw new SbcRuntimeException(1005,"余额不足,请充值!");
-        }
-        QueryWrapper<CustomerProduct> customerProductQueryWrapper = new QueryWrapper<>();
-        customerProductQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
-        customerProductQueryWrapper.eq("product_id",productCode.getChuXianCCode());
-        CustomerProduct customerProduct = customerServiceMapper.selectOne(customerProductQueryWrapper);
-        if(Objects.isNull(customerProduct)){
-            throw new SbcRuntimeException(1006,"无权限调用服务");
-        }
-        QueryWrapper<WbQueryLog> wbQueryLogQueryWrapper = new QueryWrapper<>();
-        wbQueryLogQueryWrapper.eq("order_id",request.getOrderId());
-        WbQueryLog wbQueryLog = wbQueryLogMapper.selectOne(wbQueryLogQueryWrapper);
-        if(Objects.isNull(wbQueryLog)){
-            throw new SbcRuntimeException(1007,"请核对下单id");
-        }
-        LinkedHashMap map = new LinkedHashMap<String ,Object>();
-        map.put("customerId","e4775b980f5fa7f5f45d291742870cd4");
-        Map map1 = new HashMap<String ,String>();
-        map1.put("vin",request.getVin());
-        map1.put("imageUrl",request.getImageUrl());
-        map1.put("licenseNo",request.getLicenseNo());
-        map1.put("orderId",request.getOrderId());
-        map.put("encrypt",JSON.toJSONString(map1));
-        map.put("encryptType","false");
-        map.put("productCode","BA610014");
-        map.put("reqTime",String.valueOf(System.currentTimeMillis()));
-        map.put("version","V001");
-        String string = map.toString().replace(" ","");
-        String endString = string.substring(1, string.length() - 1);
-        String sign = (MD5Util.md5Hex(endString, "utf-8"));
-        map.put("sign",sign);
-        String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
-        log.info("出险信息详版查询结果===={}",end);
-
-        JSONObject resultObject = JSONObject.parseObject(end);
-        //保存结果
-        UpdateWrapper<WbQueryLog> wrapper = new UpdateWrapper<>();
-        wrapper.set("result", end);
-        wrapper.set("back_time",LocalDateTime.now());
-        wrapper.eq("order_id", request.getOrderId());
-        wbQueryLogService.update(wrapper);
-        return resultObject;
-    }
-
-
-
-    @Override
-    public JSONObject placeAnOrder(PlaceAnOrderRequest request) {
-        QueryWrapper<CustomerInfo> customerInfoQueryWrapper = new QueryWrapper<>();
-        customerInfoQueryWrapper.eq("customer_account",request.getCustomerAccount());
-        customerInfoQueryWrapper.eq("customer_password",request.getCustomerPassword());
-        CustomerInfo customerInfo = customerInfoMapper.selectOne(customerInfoQueryWrapper);
-        if(Objects.isNull(customerInfo)){
-            throw new SbcRuntimeException(1004,"用户未注册");
-        }
-        if(customerInfo.getBalanceAmount().compareTo(BigDecimal.ZERO)<0){
-            throw new SbcRuntimeException(1005,"余额不足,请充值!");
-        }
-        QueryWrapper<CustomerProduct> customerProductQueryWrapper = new QueryWrapper<>();
-        customerProductQueryWrapper.eq("customer_id",customerInfo.getCustomerId());
-        customerProductQueryWrapper.eq("product_id",productCode.getChuXianCCode());
-        CustomerProduct customerProduct = customerServiceMapper.selectOne(customerProductQueryWrapper);
-        if(Objects.isNull(customerProduct)){
-            throw new SbcRuntimeException(1006,"无权限调用服务");
-        }
-        LinkedHashMap map = new LinkedHashMap<String ,Object>();
-        map.put("customerId","e4775b980f5fa7f5f45d291742870cd4");
-        Map map1 = new HashMap<String ,String>();
-        map1.put("vin",request.getVin());
-        map1.put("imageUrl",request.getImageUrl());
-        map1.put("licenseNo",request.getLicenseNo());
-        map.put("encrypt",JSON.toJSONString(map1));
-        map.put("encryptType","false");
-        map.put("productCode","BA610013");
-        map.put("reqTime",String.valueOf(System.currentTimeMillis()));
-        map.put("version","V001");
-        String string = map.toString().replace(" ","");
-        String endString = string.substring(1, string.length() - 1);
-        String sign = (MD5Util.md5Hex(endString, "utf-8"));
-        map.put("sign",sign);
-        String end = HttpClientUtil.doPost("https://entapi.qucent.cn/api/v3", map);
-        log.info("出险信息详版下单结果===={}",end);
-        JSONObject jsonObject = JSON.parseObject(end);
-        JSONObject encrypt = JSON.parseObject(jsonObject.get("encrypt").toString());
-        String code = encrypt.get("code").toString();
-        String orderId ="";
-        if("0".equals(code)){
-            String data = encrypt.get("data").toString();
-            orderId = JSON.parseObject(data).get("orderId").toString();
-        }
-        String charge = JSONObject.parseObject(jsonObject.get("encrypt").toString()).get("charge").toString();
-        String toll="否";
-        if("true".equals(charge)){
-            toll="是";
-            deduction(customerInfo.getCustomerId(),productCode.getChuXianCCode());
-        }
-        WbQueryLog wbQueryLog = new WbQueryLog();
-        wbQueryLog.setVin(request.getVin());
-        wbQueryLog.setProductId(customerProduct.getProductId());
-        wbQueryLog.setProductName("出险信息详版");
-        wbQueryLog.setOrderId(orderId);
-        wbQueryLog.setCallBackUrl("出险信息详版");
-        wbQueryLog.setCustomerId(customerInfo.getCustomerId());
-        wbQueryLog.setCustomerName(customerInfo.getCustomerName());
-        wbQueryLog.setToll(toll);
-        wbQueryLog.setResult(end);
-        wbQueryLog.setCreateTime(LocalDateTime.now());
-        wbQueryLogMapper.insert(wbQueryLog);
-        return JSON.parseObject(end);
-    }
 
     @Override
     public JSONObject query(DangerCRequest request) {
