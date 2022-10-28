@@ -208,7 +208,7 @@ public class DangerCServiceImpl implements DangerCService {
         map.put("carNo",request.getLicenseNo());
         map.put("suppliers",Arrays.asList(12));
         map.put("date",format);
-        map.put("callbackUrl","http://139.196.19.64:8088/dangerC/queryBackDataTest2");
+        map.put("callbackUrl","http://139.196.19.64:8088/dangerC/queryBackData2");
         String string = map.toString().replace(", ","&").replace("[","").replace("]","");
         String endString = string.substring(1, string.length() - 1);
         String sn = (MD5Util.md5Hex(endString, "utf-8"));
