@@ -11,4 +11,8 @@ public interface DangerCService {
 
     OutDangerBackResponse queryBackData(OutDangerBackRequest request);
 
+    JSONObject query2(DangerCRequest request);
+
+    JSONObject queryBackData2(JSONObject json);
+
 }

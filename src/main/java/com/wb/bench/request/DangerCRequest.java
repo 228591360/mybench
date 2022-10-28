@@ -42,6 +42,7 @@ public class DangerCRequest implements Serializable {
      * 车牌号
      */
     @ApiModelProperty(value = "车牌号")
+    @NotBlank(message = "车牌号不能为空")
     private String licenseNo;
 
     /**

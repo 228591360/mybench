@@ -1,5 +1,6 @@
 package com.wb.bench.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.wb.bench.request.DangerCRequest;
 import com.wb.bench.request.OutDangerBackRequest;
@@ -71,4 +72,49 @@ public class DangerCController {
         return outDangerBackResponse;
     }
 
+
+    /**
+     * 出险信息详版-----备用
+     * 下单回调
+     */
+    @PostMapping("/query2")
+    @ApiOperation("查询")
+    public JSONObject query2(@RequestBody @Validated DangerCRequest request){
+
+        return dangerCService.query2(request);
+    }
+
+    /**
+     * 出险信息详版 ----备用
+     */
+    @PostMapping("/queryBackData2")
+    @ApiOperation("出险信息详版回调")
+    public JSONObject queryBackData2(@RequestBody @Validated JSONObject json){
+        log.info("出险信息详版回调=================");
+        JSONObject jsonObject = new JSONObject();
+        if(Objects.isNull(json)){
+            jsonObject.put("code",1);
+            jsonObject.put("message","FAIL");
+            return jsonObject;
+        }
+        return dangerCService.queryBackData2(json);
+    }
+
+    /**
+     * 出险信息详版回调----备用
+     */
+    @PostMapping("/queryBackDataTest2")
+    @ApiOperation("出险信息详版回调")
+    public JSONObject queryBackDataTest2(@RequestBody JSONObject json){
+        JSONObject jsonObject = new JSONObject();
+        if(Objects.isNull(json)){
+            jsonObject.put("code",1);
+            jsonObject.put("message","FAIL");
+            return jsonObject;
+        }
+        JSON.toJSONString("data=================="+json);
+        jsonObject.put("code",0);
+        jsonObject.put("message","SUCCESS");
+        return jsonObject;
+    }
 }
