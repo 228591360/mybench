@@ -105,14 +105,14 @@ public class DangerCController {
      */
     @PostMapping("/queryBackDataTest2")
     @ApiOperation("出险信息详版回调")
-    public JSONObject queryBackDataTest2(@RequestBody JSONObject json){
+    public JSONObject queryBackDataTest2(String data){
         JSONObject jsonObject = new JSONObject();
-        if(Objects.isNull(json)){
+        if(Objects.isNull(data)){
             jsonObject.put("code",1);
             jsonObject.put("message","FAIL");
             return jsonObject;
         }
-        JSON.toJSONString("data=================="+json);
+        JSON.toJSONString("data=================="+data);
         jsonObject.put("code",0);
         jsonObject.put("message","SUCCESS");
         return jsonObject;
