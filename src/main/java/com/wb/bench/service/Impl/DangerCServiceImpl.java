@@ -208,7 +208,7 @@ public class DangerCServiceImpl implements DangerCService {
         map.put("carNo",request.getLicenseNo());
         map.put("suppliers",Arrays.asList(12));
         map.put("date",format);
-        map.put("callbackUrl","http://139.196.19.64:8088/dangerC/queryBackData2");
+        map.put("callbackUrl","http://139.196.19.64:8082/dangerC/queryBackData2");
         String string = map.toString().replace(", ","&").replace("[","").replace("]","");
         String endString = string.substring(1, string.length() - 1);
         String sn = (MD5Util.md5Hex(endString, "utf-8"));
@@ -216,7 +216,7 @@ public class DangerCServiceImpl implements DangerCService {
         //生成签名后删除无用字段传入接口
         map.remove("appSecret");
         map.remove("date");
-        HttpResponse execute = HttpRequest.post("http://test.carfaxinfo.com:8090/purchaseReport/order").body(JSON.toJSONString(map)).execute();
+        HttpResponse execute = HttpRequest.post("https://www.carfaxinfo.com/api/purchaseReport/order").body(JSON.toJSONString(map)).execute();
         log.info("出险信息详版下单结果===={}",execute.body());
         JSONObject result = JSONObject.parseObject(execute.body());
         String message = result.getString("message");
